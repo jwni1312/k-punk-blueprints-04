@@ -427,3 +427,85 @@ body.konami::before {
      });
    })();
    ========================================================= */
+
+/* =========================================================
+   solo mode — index & single-article, nothing else
+   ========================================================= */
+.index {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 8rem 1.25rem 6rem;
+}
+.index-mark {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+.index-mark::after {
+  content: "▍";
+  color: var(--blue);
+  margin-left: .35ch;
+  animation: blink 1.15s steps(2) infinite;
+}
+.index-whisper {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: .85rem;
+  color: var(--ink-faint);
+  margin: .35rem 0 4rem;
+}
+.index-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+}
+.index-list li {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.index-list a {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  flex: 1;
+}
+.index-list a:hover {
+  color: var(--blue-link);
+  border-bottom-color: var(--blue);
+}
+.index-list time {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* single-article: only the article, one dot back home */
+.solo {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 4rem 1.25rem 6rem;
+}
+.solo-back {
+  margin: 0 0 3rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+.solo-back a {
+  color: var(--blue);
+  text-decoration: none;
+  letter-spacing: .3em;
+}
+.solo-back a:hover { color: var(--blue-link); }
+.solo .post { margin: 0; }
