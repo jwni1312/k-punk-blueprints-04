@@ -1,10 +1,12 @@
+import type { ComponentType } from "react";
+
 export type Post = {
   slug: string;
   title: string;
-  date: string; // display
+  date: string;
   iso: string;
   dispatch: string;
-  body: () => JSX.Element;
+  body: ComponentType;
 };
 
 import { RingRoad } from "@/posts/ring-road";
