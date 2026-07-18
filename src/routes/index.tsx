@@ -4,11 +4,11 @@ import { useEffect } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "folkography — notes on love & urban heritage" },
+      { title: "folkography — notes on love, place & philosophy" },
       {
         name: "description",
         content:
-          "A k-punk-inspired writing site on folkography, love, and urban heritage.",
+          "A writing site in the k-punk tradition: philosophy, folkography, love, urban heritage.",
       },
     ],
     links: [{ rel: "stylesheet", href: "/kpunk-folkography.css" }],
@@ -17,7 +17,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  // Konami easter egg
   useEffect(() => {
     const seq = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
     let i = 0;
@@ -35,170 +34,210 @@ function Index() {
   return (
     <>
       <header className="masthead">
-        <h1>folkography</h1>
-        <p className="tagline">folkography · love · urban heritage</p>
-        <div className="ticker">
-          <span>
-            ▸ field notes from the tram stop ▸ a love letter to the wrong
-            address ▸ concrete remembers ▸ overheard on the 27 bus ▸ the archive
-            is a wound ▸ stay with the trouble ▸
-          </span>
-        </div>
+        <h1>
+          <a href="/">folkography</a>
+        </h1>
+        <p className="tagline">
+          philosophy, love, and the vernacular of the city
+        </p>
       </header>
+
+      <div className="ticker">
+        <span>
+          ▸ the lightness is the weight ▸ concrete remembers ▸ a love letter to
+          the wrong address ▸ the archive is a wound ▸ overheard on the 27 bus
+          ▸ stay with the trouble ▸
+        </span>
+      </div>
 
       <main className="wrap">
         <article className="post">
           <header>
-            <p className="meta">17 · vii · 2026 — dispatch №004</p>
+            <p className="meta">17 July 2026 · dispatch 004</p>
             <h2>
-              <a href="#">Concrete remembers: a folkography of the ring road</a>
+              <a href="#">The unbearable lightness of the ring road</a>
             </h2>
           </header>
 
           <p>
-            There is a stretch of overpass on the eastern ring where the light
-            hits the balustrade at 5:47pm and, for maybe ninety seconds, the
-            whole city admits it was built by hand. I have been walking there
-            for six years. I am still learning its grammar.
+            Kundera's <em>lightness</em> is not a relief. It is the condition
+            under which nothing recurs, and therefore nothing can be measured.
+            What is only lived once, he says, might as well not have been lived
+            at all — <em>einmal ist keinmal</em>. This is usually read as
+            melancholic. I want to read it as a description of the city.
           </p>
 
           <p>
-            Folkography, as I use the word, is not folklore and not photography
-            — it is the practice of listening to place as if place had a
-            <em> vernacular</em>. The buildings speak in dialect. The bus stops
-            keep diaries.
+            The eastern ring road, where I have walked for six years, has the
+            texture of a thing that never repeats. Every crossing is once. Every
+            light at 5:47pm is once. And yet the ring road is <em>heavy</em>. It
+            is heavy in the way only a place that refuses to become a symbol can
+            be heavy: it insists on its own particulars, and its particulars
+            resist thought.
+          </p>
+
+          <p>
+            This is what I mean when I say <strong>folkography</strong>. Not
+            folklore. Not photography. A discipline — if it can be called that —
+            of attending to the vernacular of place with the seriousness one
+            usually reserves for philosophy. The city has a grammar. The bus
+            stops keep diaries. To read them is not sentimental; it is
+            ontological.
           </p>
 
           <blockquote>
-            The city is a text written by nobody in particular and read by
-            everybody at once. — overheard, tram 4
+            The everyday is not what is closest to us. It is what is most
+            difficult to reach.
+            <cite>Blanchot, roughly</cite>
           </blockquote>
 
-          <h3>What the ring road knows</h3>
+          <h3>i. lightness as method</h3>
 
           <p>
-            The ring road knows the name of every person who has waited for a
-            bus that never came. It knows the difference between grief and
-            traffic. It knows the exact weight of a shopping bag full of
-            oranges.
+            Fisher's <em>k-punk</em> was, among other things, a demonstration
+            that theory could be practised at the speed of a blog post — that
+            philosophy did not require the monograph, only the interval between
+            one train and the next. What I want to borrow is not the tone but
+            the tempo. Short entries. Long thoughts. Cheap paper.
           </p>
 
           <p>
-            I walked it with M. in the winter. We didn't talk much. Love, at
-            that point, was mostly a shared vocabulary for weather. She said:
-            <em> everything ugly here is honest</em>. I wrote it down on the
-            back of a receipt from a bakery that has since closed.
+            Lightness, then, is not a lack of seriousness. It is a refusal of
+            the monument. The ring road is the opposite of a monument. It has
+            no plaque, no anniversary, no photograph on the tourist board's
+            website. It is only there, and it will only be there once, even
+            though I walk it every week.
+          </p>
+
+          <h3>ii. love, or: the second reading</h3>
+
+          <p>
+            I walked it with M. in the winter. Love, in the Kunderian sense, is
+            the second reading of a place — the moment at which the once-only
+            becomes doubled, becomes bearable, because someone else has now also
+            been there, at that hour, in that light. Heritage works the same
+            way. It is the city's second reading of itself.
           </p>
 
           <p>
-            The bakery is now a phone repair shop. The phone repair shop has a
-            hand-painted sign in Cyrillic and Latin script, layered over an
-            older sign in a language I cannot read but recognise as <em>ours</em>.
-            This is what I mean by heritage. Not the plaque. The palimpsest.
-          </p>
-
-          <h3>Method (such as it is)</h3>
-
-          <p>
-            You walk. You write down what you hear. You do not correct the
-            grammar of the city. You take photographs only of the things you
-            cannot describe. You go back on a different day and check whether
-            the place still agrees with you. Usually it doesn't.
+            The bakery on the corner has become a phone repair shop. Its
+            hand-painted sign is layered over an older sign in a language I
+            cannot read but recognise as <em>ours</em>. This is not
+            preservation. It is palimpsest. Preservation freezes; palimpsest
+            reads. To care about urban heritage, I think, is to prefer the
+            palimpsest.
           </p>
 
           <p>
-            This paragraph is the seventh. Hover over it if you have a mouse.
-            The city glitches when you look too closely. So do I. So does love.
-            So does any archive worth keeping. The signal degrades. The signal
-            was never clean to begin with. That's the point.
+            This paragraph is the seventh, and if the CSS is working correctly
+            it should refuse to be read cleanly — a small demonstration that
+            the thought and the surface are not separable. The signal degrades
+            because the signal was never clean to begin with. That is not a
+            bug. That is the object of study.
+          </p>
+
+          <h3>iii. a programme, tentatively</h3>
+
+          <p>
+            I will post here weekly. Some entries will be theoretical, some
+            will be field notes, some will be love letters addressed to
+            buildings that no longer exist. I do not intend to distinguish them
+            too carefully. Philosophy done from a bus stop is still philosophy.
+            It is only the chairs that are missing.
           </p>
 
           <hr />
 
           <p>
-            I'll be posting field notes here weekly. Some will be short —
-            single overheard sentences, a photograph of a doorway, the smell of
-            a stairwell rendered into three lines. Others will be longer, like
-            this one, and probably worse.
+            Write to me. Tell me about your ring road. Tell me the name of the
+            bakery that closed, and who you loved there, and whether the light
+            at 5:47pm still holds.
           </p>
 
-          <p>
-            Write to me. Tell me about your ring road. Tell me the name of the
-            bakery that closed. Tell me who you loved there.
-          </p>
+          <div className="notes">
+            <ol>
+              <li>
+                Milan Kundera, <em>The Unbearable Lightness of Being</em>
+                (1984). The <em>einmal ist keinmal</em> passage is in the
+                opening pages.
+              </li>
+              <li>
+                Mark Fisher, <em>k-punk</em> (blog, 2003–2016); collected as
+                <em> k-punk: The Collected and Unpublished Writings</em>
+                (Repeater, 2018).
+              </li>
+              <li>
+                Maurice Blanchot on the everyday — the line is a paraphrase;
+                the essay is <em>Everyday Speech</em> (1959).
+              </li>
+            </ol>
+          </div>
 
           <div className="tags">
-            <a href="#" className="tag-folk">
-              folkography
-            </a>
-            <a href="#" className="tag-love">
-              love
-            </a>
-            <a href="#" className="tag-urban">
-              urban heritage
-            </a>
-            <a href="#" className="tag-folk">
-              field notes
-            </a>
+            <a href="#" className="tag-folk">folkography</a>
+            <a href="#" className="tag-love">love</a>
+            <a href="#" className="tag-urban">urban heritage</a>
+            <a href="#">philosophy</a>
+            <a href="#">kundera</a>
           </div>
         </article>
 
         <aside className="sidebar">
-          <h4>About</h4>
-          <p>
-            A notebook on <em>folkography</em> — the vernacular of place —
-            written on foot, from the outskirts inward.
-          </p>
+          <div>
+            <h4>About</h4>
+            <p>
+              A notebook on folkography — philosophy done on foot, from the
+              outskirts inward.
+            </p>
+          </div>
 
-          <h4>Recent</h4>
-          <ul>
-            <li>
-              <a href="#">Concrete remembers</a>
-              <time>17 · vii · 2026</time>
-            </li>
-            <li>
-              <a href="#">A love letter to the wrong address</a>
-              <time>03 · vii · 2026</time>
-            </li>
-            <li>
-              <a href="#">Overheard on the 27</a>
-              <time>21 · vi · 2026</time>
-            </li>
-            <li>
-              <a href="#">The archive is a wound</a>
-              <time>09 · vi · 2026</time>
-            </li>
-          </ul>
+          <div>
+            <h4>Recent</h4>
+            <ul>
+              <li>
+                <a href="#">The unbearable lightness of the ring road</a>
+                <time>17.vii.2026</time>
+              </li>
+              <li>
+                <a href="#">A love letter to the wrong address</a>
+                <time>03.vii.2026</time>
+              </li>
+              <li>
+                <a href="#">Overheard on the 27</a>
+                <time>21.vi.2026</time>
+              </li>
+              <li>
+                <a href="#">The archive is a wound</a>
+                <time>09.vi.2026</time>
+              </li>
+            </ul>
+          </div>
 
-          <h4>Tags</h4>
-          <ul>
-            <li>
-              <a href="#">folkography</a>
-            </li>
-            <li>
-              <a href="#">love</a>
-            </li>
-            <li>
-              <a href="#">urban heritage</a>
-            </li>
-            <li>
-              <a href="#">field notes</a>
-            </li>
-            <li>
-              <a href="#">palimpsest</a>
-            </li>
-          </ul>
+          <div>
+            <h4>Tags</h4>
+            <ul>
+              <li><a href="#">folkography</a></li>
+              <li><a href="#">love</a></li>
+              <li><a href="#">urban heritage</a></li>
+              <li><a href="#">philosophy</a></li>
+              <li><a href="#">palimpsest</a></li>
+              <li><a href="#">kundera</a></li>
+              <li><a href="#">fisher</a></li>
+            </ul>
+          </div>
 
-          <h4>Colophon</h4>
-          <p>
-            Set in Iowan Old Style &amp; JetBrains Mono. Written in transit.
-            Best read on the way somewhere.
-          </p>
+          <div>
+            <h4>Colophon</h4>
+            <p>
+              Set in Georgia &amp; system sans. Written in transit. Best read
+              on the way somewhere.
+            </p>
+          </div>
         </aside>
       </main>
 
       <footer className="colophon">
-        © folkography — a notebook, not a monument. try ↑↑↓↓←→←→BA.
+        © folkography — a notebook, not a monument. // ↑↑↓↓←→←→BA
       </footer>
     </>
   );
