@@ -1,62 +1,98 @@
-import { createFileRoute, notFound, Link } from "@tanstack/react-router";
-import { getPost, posts } from "@/lib/posts";
+import { PortableText } from "@portabletext/react"
+import {
+  createFileRoute,
+  Link,
+  notFound,
+} from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
+import { sanityClient } from "@/lib/sanity"
 
-export const Route = createFileRoute("/$slug")({
-  loader: ({ params }) => {
-    const post = getPost(params.slug);
-    if (!post) throw notFound();
-    return { post };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData)
-      return {
-        meta: [
-          { title: "—" },
-          { name: "robots", content: "noindex" },
-        ],
-        links: [{ rel: "stylesheet", href: "/kpunk-folkography.css" }],
-      };
-    return {
-      meta: [
-        { title: loaderData.post.title },
-        { name: "description", content: loaderData.post.title },
-      ],
-      links: [{ rel: "stylesheet", href: "/kpunk-folkography.css" }],
-    };
-  },
-  notFoundComponent: () => (
-    <main className="solo">
-      <p className="solo-back">
-        <Link to="/">·</Link>
-      </p>
-      <article className="post">
-        <p>not here.</p>
-      </article>
-    </main>
-  ),
-  component: PostPage,
-});
-
-function PostPage() {
-  const { post } = Route.useLoaderData();
-  const Body = post.body;
-  return (
-    <main className="solo">
-      <p className="solo-back">
-        <Link to="/" aria-label="return">·</Link>
-      </p>
-      <article className="post">
-        <header>
-          <p className="meta">
-            {post.date} · {post.dispatch}
-          </p>
-          <h2>{post.title}</h2>
-        </header>
-        <Body />
-      </article>
-    </main>
-  );
+type SanityPost = {
+  title: string
+  slug: string
+  publishedAt?: string
+  body?: any[]
 }
 
-// keep tree-shaking honest
-void posts;
+const getPostBySlug = createServerFn({ method: "GET" })
+  .validator((data: { slug: string }) => data)
+  .handler(async ({ data }) => {
+    return sanityClient.fetch<SanityPost | null>(
+      `
+        *[_type == "post" && slug.current == $slug][0]{
+          title,
+          "slug": slug.current,
+          publishedAt,
+          body
+        }
+      `,
+      { slug: data.slug },
+    )
+  })
+
+export const Route = createFileRoute("/$slug")({
+  loader: async ({ params }) => {
+    const post = await getPostBySlug({
+      data: { slug: params.slug },
+    })
+
+    if (!post) {
+      throw notFound()
+    }
+
+    return { post }
+  },
+
+  head: ({ loaderData }) => ({
+    meta: [
+      {
+        title: loaderData?.post.title ?? "Post not found",
+      },
+      {
+        name: "description",
+        content: loaderData?.post.title ?? "",
+      },
+    ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: "/kpunk-folkography.css",
+      },
+    ],
+  }),
+
+  notFoundComponent: () => (
+    <main className="post">
+      <p>not here.</p>
+      <Link to="/">← return</Link>
+    </main>
+  ),
+
+  component: PostPage,
+})
+
+function PostPage() {
+  const { post } = Route.useLoaderData()
+
+  return (
+    <main className="post">
+      <Link to="/">← return</Link>
+
+      <article>
+        <header>
+          <h1>{post.title}</h1>
+
+          {post.publishedAt ? (
+            <time dateTime={post.publishedAt}>
+              {new Date(post.publishedAt).toLocaleDateString()}
+            </time>
+          ) : null}
+        </header>
+
+        <div className="post-body">
+          <PortableText value={post.body ?? []} />
+        </div>
+      </article>
+    </main>
+  )
+}
