@@ -5,17 +5,17 @@ export const Route = createFileRoute("/oral-history")({
   component: OralHistory,
 })
 
+const defaultArchive = {
+  id: "ORAL.HST.01",
+  title: "ΜΑΡΤΥΡΙΑ // ΣΥΛΛΟΓΗ 01",
+  description: "«Η μνήμη δεν είναι απλώς αυτό που έμεινε πίσω, αλλά αυτό που συνεχίζει να ασκεί πίεση στα πράγματα...»",
+  audioUrl: "/01 Addis.mp3",
+  author: "Αρχείο Μνήμης",
+  date: "2026-06-05",
+}
+
 function OralHistory() {
-  const [oralHistories, setOralHistories] = useState<any[]>([
-    {
-      id: "ORAL.HST.01",
-      title: "ΜΑΡΤΥΡΙΑ // ΣΥΛΛΟΓΗ 01",
-      description: "«Η μνήμη δεν είναι απλώς αυτό που έμεινε πίσω, αλλά αυτό που συνεχίζει να ασκεί πίεση στα πράγματα...»",
-      audioUrl: "/01 Addis.mp3",
-      author: "Αρχείο Μνήμης",
-      date: "2026-06-05",
-    },
-  ])
+  const [oralHistories, setOralHistories] = useState<any[]>([defaultArchive])
 
   useEffect(() => {
     const saved = localStorage.getItem("folkography_oral_history")
@@ -23,7 +23,10 @@ function OralHistory() {
       try {
         const parsed = JSON.parse(saved)
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setOralHistories(parsed)
+          const validItems = parsed.filter(item => item && typeof item === 'object' && item.title)
+          if (validItems.length > 0) {
+            setOralHistories(validItems)
+          }
         }
       } catch (e) {
         console.error(e)
@@ -45,7 +48,7 @@ function OralHistory() {
     }
   }, [])
 
-  const currentItem = oralHistories[currentIndex] || oralHistories[0]
+  const currentItem = oralHistories[currentIndex] || oralHistories[0] || defaultArchive
 
   const changeIndex = (newIndex: number) => {
     if (audioRef.current) {
@@ -180,11 +183,11 @@ function OralHistory() {
             <div style={{ fontSize: '0.65rem', letterSpacing: '2px', color: 'var(--rose)', marginBottom: '0.5rem' }}>// ΕΥΡΕΤΗΡΙΟ</div>
             {oralHistories.map((archive: any, index: number) => (
               <div 
-                key={archive.id} 
+                key={archive?.id || index} 
                 className={`side-index-item ${currentIndex === index ? 'active' : ''}`}
                 onClick={() => changeIndex(index)}
               >
-                {archive.title}
+                {archive?.title || "ΑΝΩΝΥΜΟ ΑΡΧΕΙΟ"}
               </div>
             ))}
           </div>
@@ -197,14 +200,14 @@ function OralHistory() {
 
         <div className="oral-container">
           <div>
-            <h1 className="oral-title">{currentItem.title}</h1>
+            <h1 className="oral-title">{currentItem?.title}</h1>
             <span className="oral-subtitle">
-              Ημ/νία: {currentItem.date}
+              Ημ/νία: {currentItem?.date || "—"}
             </span>
           </div>
 
           <div className="oral-text">
-            <p>{currentItem.description}</p>
+            <p>{currentItem?.description}</p>
           </div>
 
           <div className="player-deck">
@@ -212,7 +215,7 @@ function OralHistory() {
               {isPlaying ? '[ ◼ PAUSE ]' : '[ ▶ PLAY ]'}
             </button>
             <button className="deck-btn" onClick={handleRewind}>[ ↺ REWIND -5S ]</button>
-            <a href={currentItem.audioUrl || "/01 Addis.mp3"} download className="deck-btn">[ EXTRACT DATA ]</a>
+            <a href={currentItem?.audioUrl || "/01 Addis.mp3"} download className="deck-btn">[ EXTRACT DATA ]</a>
           </div>
 
           <div className="doc-navigation">
