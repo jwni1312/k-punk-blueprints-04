@@ -125,6 +125,7 @@ function Index() {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isCaught, skipIntro])
 
+  // Τη στιγμή ακριβώς που πιάνεται το τερματικό:
   const handleCatch = () => {
     setIsCaught(true)
     if (btnRef.current) {
@@ -132,28 +133,23 @@ function Index() {
       btnRef.current.style.transform = ""
     }
 
-    let activeMessage = ""
+    // Διαβάζουμε το ενεργό broadcast μήνυμα
     const saved = localStorage.getItem("folkography_announcement")
-    
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
         if (parsed.expiresAt && Date.now() < parsed.expiresAt) {
-          activeMessage = parsed.message
+          setDivineMessageText(parsed.message)
+          setShowDivineMessage(true)
+          setTimeout(() => {
+            setShowDivineMessage(false)
+          }, 5000)
         } else {
           localStorage.removeItem("folkography_announcement")
         }
       } catch (e) {
-        console.error(e)
+        console.error("Error parsing broadcast:", e)
       }
-    }
-
-    if (activeMessage) {
-      setDivineMessageText(activeMessage)
-      setShowDivineMessage(true)
-      setTimeout(() => {
-        setShowDivineMessage(false)
-      }, 5000)
     }
   }
 
