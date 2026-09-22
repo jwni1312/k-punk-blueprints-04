@@ -17,6 +17,7 @@ import { Route as EchotopiasRouteImport } from './routes/echotopias'
 import { Route as OralHistoryRouteImport } from './routes/oral-history'
 import { Route as PhilosophyRouteImport } from './routes/philosophy'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as PurgatorioRouteImport } from './routes/purgatorio'
 import { Route as WritingsRouteImport } from './routes/writings'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
@@ -61,6 +62,11 @@ const ProjectsRoute = ProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PurgatorioRoute = PurgatorioRouteImport.update({
+  id: '/purgatorio',
+  path: '/purgatorio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WritingsRoute = WritingsRouteImport.update({
   id: '/writings',
   path: '/writings',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/oral-history': typeof OralHistoryRoute
   '/philosophy': typeof PhilosophyRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/purgatorio': typeof PurgatorioRoute
   '/writings': typeof WritingsRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/echotopias': typeof EchotopiasRoute
   '/oral-history': typeof OralHistoryRoute
   '/philosophy': typeof PhilosophyRoute
+  '/purgatorio': typeof PurgatorioRoute
   '/writings': typeof WritingsRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects': typeof ProjectsIndexRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/oral-history': typeof OralHistoryRoute
   '/philosophy': typeof PhilosophyRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/purgatorio': typeof PurgatorioRoute
   '/writings': typeof WritingsRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/oral-history'
     | '/philosophy'
     | '/projects'
+    | '/purgatorio'
     | '/writings'
     | '/projects/$slug'
     | '/projects/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/echotopias'
     | '/oral-history'
     | '/philosophy'
+    | '/purgatorio'
     | '/writings'
     | '/projects/$slug'
     | '/projects'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/oral-history'
     | '/philosophy'
     | '/projects'
+    | '/purgatorio'
     | '/writings'
     | '/projects/$slug'
     | '/projects/'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   OralHistoryRoute: typeof OralHistoryRoute
   PhilosophyRoute: typeof PhilosophyRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
+  PurgatorioRoute: typeof PurgatorioRoute
   WritingsRoute: typeof WritingsRoute
 }
 
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/purgatorio': {
+      id: '/purgatorio'
+      path: '/purgatorio'
+      fullPath: '/purgatorio'
+      preLoaderRoute: typeof PurgatorioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/writings': {
       id: '/writings'
       path: '/writings'
@@ -274,6 +294,7 @@ const rootRouteChildren: RootRouteChildren = {
   OralHistoryRoute: OralHistoryRoute,
   PhilosophyRoute: PhilosophyRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
+  PurgatorioRoute: PurgatorioRoute,
   WritingsRoute: WritingsRoute,
 }
 export const routeTree = rootRouteImport

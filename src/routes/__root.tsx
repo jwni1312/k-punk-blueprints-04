@@ -56,8 +56,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Folkography" },
-      { name: "description", content: "notes on cinema, music, image, and everything in-between." },
+      { title: "TINAFTO" },
+      { name: "description", content: "TINAFTO digital space." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -222,7 +222,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       
-      {/* ================= CSS ΓΙΑ ΚΕΡΣΟΡΑ & MOBILE ================= */}
       <style dangerouslySetInnerHTML={{ __html: `
         /* Desktop: Ο custom κέρσορας */
         body.enable-custom-cursor * { cursor: none !important; }
@@ -252,7 +251,7 @@ function RootComponent() {
           }
           body { animation: mobile-flicker 6s infinite !important; }
 
-          /* 3. Δομή Μενού σε κάθετη στήλη */
+          /* 3. Δομή Μενού: Κεντράρισμα & Στήλη */
           .project-screen {
             display: flex;
             flex-direction: column !important;
@@ -261,26 +260,38 @@ function RootComponent() {
             width: 100% !important;
             position: relative !important;
             height: auto !important;
-            border-right: none !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem 1rem 1.5rem !important;
+            border: none !important; /* Αφαιρεί τις γραμμές */
+            padding: 5rem 1rem 1.5rem !important; /* Χώρος πάνω για το ηχειάκι */
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
           }
+          
+          /* 4. Αφαίρεση του κόκκινου τετραγώνου από το ΤΙΝΑΦΤΟ */
+          .sidebar-logo, .tinafto-monolith {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            display: block !important;
+            text-align: center !important;
+          }
+
+          /* 5. Στοίχιση κατηγοριών κάθετα */
           .sidebar-nav {
             display: flex !important;
             flex-direction: column !important;
             gap: 1.5rem !important;
-            margin-top: 1.5rem !important;
-            align-items: center;
+            margin-top: 2rem !important;
+            align-items: center !important;
+            width: 100% !important;
           }
           .sidebar-intro {
-            margin: 1rem 0 !important;
+            display: none !important; /* Κρύβει το αγγλικό κειμενάκι στα κινητά για πιο καθαρό look */
           }
 
-          /* 4. Προσαρμογή θέσης για το ηχειάκι (πάνω δεξιά για να μην πέφτει στο λογότυπο) */
+          /* 6. Ηχειάκι πάνω δεξιά */
           .audio-mobile-btn {
             top: 1rem !important;
             right: 1rem !important;
@@ -342,40 +353,35 @@ function RootComponent() {
       <div className="project-screen">
         <aside className="project-sidebar">
           <div>
-            <Link to="/" className="sidebar-logo">
-              FOLKOGRAPHY
+            {/* Λογότυπο TINAFTO */}
+            <Link to="/" className="sidebar-logo tinafto-monolith" style={{ color: 'var(--rose, #ff4d4d)' }}>
+              TINAFTO
             </Link>
 
-            <p className="sidebar-intro">
-              notes on cinema, music,
-              <br />
-              image, and everything
-              <br />
-              in-between.
-            </p>
-
+            {/* Κάθετο Μενού */}
             <nav className="sidebar-nav" aria-label="Main navigation">
-              <Link to="/" activeProps={{ className: "is-active" }} activeOptions={{ exact: true }}>
-                / Home
+              <Link to="/writings" activeProps={{ className: "is-active" }}>
+                ΓΡΑΦΤΑ
               </Link>
-              <Link to="/projects" activeProps={{ className: "is-active" }}>
-                / Projects
+              <Link to="/philosophy" activeProps={{ className: "is-active" }}>
+                ΦΙΛΟΣΟΦΙΑ
               </Link>
-              <span>Notebook</span>
-              <span>About</span>
-              <span>Contact</span>
+              <Link to="/oral-history" activeProps={{ className: "is-active" }}>
+                ΠΡΟΦΟΡΙΚΗ ΙΣΤΟΡΙΑ
+              </Link>
+              <Link to="/echotopias" activeProps={{ className: "is-active" }}>
+                ΗΧΟΤΟΠΙΑ
+              </Link>
+              <Link to="/contact" activeProps={{ className: "is-active" }}>
+                CONTACT
+              </Link>
             </nav>
           </div>
-
-          <footer className="sidebar-footer">
-            <p>© 2026 Folkography</p>
-            <p>Built as a digital notebook.</p>
-          </footer>
         </aside>
 
         <Outlet />
 
-        {/* ΚΟΥΜΠΙ ΗΧΟΥ (ΜΟΝΟ ΜΕ SVG ΕΙΚΟΝΙΔΙΑ) */}
+        {/* ΚΟΥΜΠΙ ΗΧΟΥ */}
         <button 
           className="audio-mobile-btn"
           onClick={toggleMute}
@@ -398,13 +404,11 @@ function RootComponent() {
           }}
         >
           {isMuted ? (
-            /* Ηχειάκι με διαγώνια γραμμή (Muted) */
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <line x1="1" y1="1" x2="23" y2="23"></line>
             </svg>
           ) : (
-            /* Απλό ηχειάκι (Unmuted) */
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>

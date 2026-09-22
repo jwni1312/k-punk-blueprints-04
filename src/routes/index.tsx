@@ -8,7 +8,7 @@ const getHomepage = createServerFn({ method: "GET" }).handler(async () => {
     sanityClient.fetch<{ siteTitle?: string; subtitle?: string } | null>(`
       *[_type == "homepage"][0]{ siteTitle, subtitle }
     `),
-    getPosts(),
+    getPosts()
   ])
   return { homepage, sanityPosts }
 })
@@ -31,8 +31,11 @@ function Index() {
   const [isCaught, setIsCaught] = useState(skipIntro)
   const [isEntered, setIsEntered] = useState(skipIntro) 
   
-  const velocity = useRef({ dx: 1.5, dy: 1.5 })
+  // States για το Μήνυμα Εξ Ουρανού
+  const [showDivineMessage, setShowDivineMessage] = useState(false)
+  const [divineMessageText, setDivineMessageText] = useState("")
   
+  const velocity = useRef({ dx: 1.5, dy: 1.5 })
   const btnRef = useRef<HTMLButtonElement>(null)
   const shroudRef = useRef<HTMLDivElement>(null)
 
@@ -111,7 +114,6 @@ function Index() {
       }
 
       btnRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-
       animationFrameId = requestAnimationFrame(updatePosition);
     }
 
@@ -124,6 +126,28 @@ function Index() {
     if (btnRef.current) {
       btnRef.current.innerText = "TINAFTO"
       btnRef.current.style.transform = ""
+    }
+
+    // Διαβάζουμε το μήνυμα απευθείας από το LocalStorage (το Admin panel σου)
+    let activeMessage = ""
+    const saved = localStorage.getItem("folkography_announcement")
+    
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      if (parsed.expiresAt && Date.now() < parsed.expiresAt) {
+        activeMessage = parsed.message
+      } else {
+        localStorage.removeItem("folkography_announcement")
+      }
+    }
+
+    // Αν υπάρχει ενεργό μήνυμα, το δείχνουμε για 5 δευτερόλεπτα
+    if (activeMessage) {
+      setDivineMessageText(activeMessage)
+      setShowDivineMessage(true)
+      setTimeout(() => {
+        setShowDivineMessage(false)
+      }, 5000)
     }
   }
 
@@ -145,19 +169,8 @@ function Index() {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: `
-        aside, header, nav, .sidebar, .project-topbar {
-          display: none !important;
-        }
-
-        .void-root {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background-color: var(--night, #000);
-          z-index: 999999;
-          cursor: none;
-          overflow: hidden;
-          transition: opacity 2s ease;
-        }
+        aside, header, nav, .sidebar, .project-topbar { display: none !important; }
+        .void-root { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--night, #000); z-index: 999999; cursor: none; overflow: hidden; transition: opacity 2s ease; }
         .void-root.entered { opacity: 0; pointer-events: none; }
         .joyce-canvas { position: absolute; inset: 0; padding: 4rem; color: #ffe6a0; font-family: "Courier New", Courier, monospace; font-size: 1.4rem; line-height: 1.8; text-align: justify; z-index: 1; }
         .flicker { animation: bulb-flicker 4s infinite; }
@@ -171,209 +184,57 @@ function Index() {
         
         .haunted-btn { top: 0; left: 0; position: absolute; width: 260px; height: 65px; display: flex; align-items: center; justify-content: center; background: #000; color: #ff0000; border: 1px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); font-family: "Courier New", Courier, monospace; font-size: 1.5rem; font-weight: bold; letter-spacing: 6px; z-index: 4; cursor: crosshair; will-change: transform; }
         
-        .haunted-btn.caught { 
-          left: 50% !important; 
-          top: 50% !important; 
-          transform: translate(-50%, -50%) !important; 
-          background: var(--night); 
-          color: var(--cream); 
-          border-color: var(--rose); 
-          box-shadow: none; 
-          cursor: pointer; 
-          transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
+        .haunted-btn.caught { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; background: var(--night); color: var(--cream); border-color: var(--rose); box-shadow: none; cursor: pointer; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        .archive-mainframe {
-          position: fixed;
-          top: 0; left: 0;
-          width: 100vw; height: 100vh;
-          background-color: var(--night);
-          color: var(--cream);
-          font-family: "Courier New", Courier, monospace; 
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;
-        }
-
-        .bosch-background {
-          position: absolute;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1920px-The_Garden_of_earthly_delights.jpg');
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          filter: grayscale(100%) invert(100%) sepia(100%) hue-rotate(180deg) saturate(400%) contrast(1.4);
-          opacity: 0.25; 
-          z-index: 0;
-          pointer-events: none;
-        }
-
-        .content-layer {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-        }
-
-        .compass-container {
-          position: relative;
-          width: 60vw;
-          max-width: 700px;
-          height: 60vh;
-          max-height: 600px;
-          border: 1px solid rgba(255, 230, 160, 0.15);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .tinafto-monolith {
-          position: relative;
-          font-size: 3.5rem; 
-          font-weight: bold; 
-          letter-spacing: 0.4em;
-          margin: 0;
-          margin-right: -0.4em;
-          color: var(--rose); 
-          opacity: 0.9; 
-          font-family: "Courier New", Courier, monospace;
-          text-shadow: 0px 4px 15px rgba(206, 104, 117, 0.4); 
-          user-select: none;
-          z-index: 2;
-          cursor: pointer;
-        }
-
-        .dir-node {
-          position: absolute;
-          text-decoration: none;
-          color: var(--rose);
-          font-weight: normal; 
-          letter-spacing: 4px;
-          font-size: 1.2rem;
-          background: var(--night);
-          padding: 0 1rem;
-          transition: all 0.3s ease;
-          text-shadow: 0px 2px 10px rgba(0,0,0,0.9);
-          text-transform: uppercase;
-        }
-
-        .dir-node:hover {
-          color: var(--cream);
-          text-shadow: 0px 0px 8px var(--rose);
-          transform: scale(1.05); 
-        }
-
-        .node-top {
-          top: 0;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
+        .archive-mainframe { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--night); color: var(--cream); font-family: "Courier New", Courier, monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
+        .bosch-background { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1920px-The_Garden_of_earthly_delights.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; filter: grayscale(100%) invert(100%) sepia(100%) hue-rotate(180deg) saturate(400%) contrast(1.4); opacity: 0.25; z-index: 0; pointer-events: none; }
+        .content-layer { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
+        .compass-container { position: relative; width: 60vw; max-width: 700px; height: 60vh; max-height: 600px; border: 1px solid rgba(255, 230, 160, 0.15); display: flex; align-items: center; justify-content: center; }
+        .tinafto-monolith { position: relative; font-size: 3.5rem; font-weight: bold; letter-spacing: 0.4em; margin: 0; margin-right: -0.4em; color: var(--rose); opacity: 0.9; font-family: "Courier New", Courier, monospace; text-shadow: 0px 4px 15px rgba(206, 104, 117, 0.4); user-select: none; z-index: 2; cursor: pointer; }
+        .dir-node { position: absolute; text-decoration: none; color: var(--rose); font-weight: normal; letter-spacing: 4px; font-size: 1.2rem; background: var(--night); padding: 0 1rem; transition: all 0.3s ease; text-shadow: 0px 2px 10px rgba(0,0,0,0.9); text-transform: uppercase; }
+        .dir-node:hover { color: var(--cream); text-shadow: 0px 0px 8px var(--rose); transform: scale(1.05); }
+        .node-top { top: 0; left: 50%; transform: translate(-50%, -50%); }
         .node-top:hover { transform: translate(-50%, -50%) scale(1.05); }
-
-        .node-bottom {
-          bottom: 0;
-          left: 50%;
-          transform: translate(-50%, 50%);
-        }
+        .node-bottom { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
         .node-bottom:hover { transform: translate(-50%, 50%) scale(1.05); }
-
-        .node-right {
-          right: 0;
-          top: 50%;
-          transform: translate(50%, -50%) rotate(90deg);
-        }
+        .node-right { right: 0; top: 50%; transform: translate(50%, -50%) rotate(90deg); }
         .node-right:hover { transform: translate(50%, -50%) rotate(90deg) scale(1.05); }
-
-        .node-left {
-          left: 0;
-          top: 50%;
-          transform: translate(-50%, -50%) rotate(-90deg);
-        }
+        .node-left { left: 0; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
         .node-left:hover { transform: translate(-50%, -50%) rotate(-90deg) scale(1.05); }
+        .contact-corner { position: absolute; bottom: 2rem; right: 2rem; font-family: "Courier New", Courier, monospace; z-index: 1; }
+        .contact-corner a { color: var(--cream); opacity: 0.5; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; transition: all 0.2s; text-shadow: 0px 2px 8px rgba(0,0,0,0.8); }
+        .contact-corner a:hover { opacity: 1; color: var(--rose); }
 
-        .contact-corner {
-          position: absolute;
-          bottom: 2rem;
-          right: 2rem;
-          font-family: "Courier New", Courier, monospace;
-          z-index: 1;
-        }
-        
-        .contact-corner a {
-          color: var(--cream);
-          opacity: 0.5;
-          text-decoration: none;
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-          transition: all 0.2s;
-          text-shadow: 0px 2px 8px rgba(0,0,0,0.8);
-        }
-        
-        .contact-corner a:hover {
-          opacity: 1;
-          color: var(--rose);
-        }
+        /* CSS για το "Μήνυμα Εξ Ουρανού" */
+        .divine-message-container { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.95); z-index: 99999; pointer-events: none; }
+        .divine-message-text { color: rgba(255, 255, 255, 0.9); font-family: "Courier New", Courier, monospace; font-size: 1.2rem; text-align: center; max-width: 80%; line-height: 1.5; animation: blurFadeInOut 5s ease-in-out forwards; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+        @keyframes blurFadeInOut { 0% { opacity: 0; filter: blur(10px); transform: scale(0.95); } 15% { opacity: 1; filter: blur(0px); transform: scale(1); } 85% { opacity: 1; filter: blur(0px); transform: scale(1); } 100% { opacity: 0; filter: blur(10px); transform: scale(1.05); } }
+        @media (max-width: 768px) { .divine-message-text { font-size: 1rem; max-width: 90%; } }
       `}} />
 
       <main className="archive-mainframe">
-        
         <div className="bosch-background"></div>
-
         <div className="content-layer">
-          
           <div className="compass-container">
-            {/* Triplo klik edw sto TINAFTO anigei to kryfo admin panel */}
-            <h1 
-              className="tinafto-monolith"
-              onClick={handleTinaftoTripleClick}
-              title=""
-            >
-              TINAFTO
-            </h1>
-
-            <Link to="/writings" className="dir-node node-top">
-              ΓΡΑΦΤΑ
-            </Link>
-
-            <Link to="/philosophy" className="dir-node node-right">
-              ΕΛΛΕΙΠΗΣ ΦΙΛΟΣΟΦΙΑ
-            </Link>
-
-            <Link to="/oral-history" className="dir-node node-bottom">
-              ΑΡΧΕΙΟ ΠΡΟΦΟΡΙΚΗΣ ΙΣΤΟΡΙΑΣ
-            </Link>
-
-            <Link to="/echotopias" className="dir-node node-left">
-              ΗΧΟΤΟΠΙΑ
-            </Link>
+            <h1 className="tinafto-monolith" onClick={handleTinaftoTripleClick} title="">TINAFTO</h1>
+            <Link to="/writings" className="dir-node node-top">ΓΡΑΦΤΑ</Link>
+            <Link to="/philosophy" className="dir-node node-right">ΕΛΛΕΙΠΗΣ ΦΙΛΟΣΟΦΙΑ</Link>
+            <Link to="/oral-history" className="dir-node node-bottom">ΑΡΧΕΙΟ ΠΡΟΦΟΡΙΚΗΣ ΙΣΤΟΡΙΑΣ</Link>
+            <Link to="/echotopias" className="dir-node node-left">ΗΧΟΤΟΠΙΑ</Link>
           </div>
-
         </div>
-
         <div className="contact-corner">
           <Link to="/contact">CONTACT</Link>
         </div>
-
       </main>
 
       {!skipIntro && (
         <div className={`void-root ${isEntered ? "entered" : ""}`}>
-          
           <div className={`joyce-canvas ${!isCaught ? "flicker" : ""}`} style={{ opacity: isCaught ? 0 : 1 }}>
             {fullPoem}
           </div>
 
-          <div 
-            ref={shroudRef}
-            className="darkness-shroud"
-            style={isCaught ? { background: 'var(--night)' } : {}}
-          />
+          <div ref={shroudRef} className="darkness-shroud" style={isCaught ? { background: 'var(--night)' } : {}} />
 
           {isCaught && (
             <div className="wave-container crash">
@@ -389,6 +250,14 @@ function Index() {
             {!isCaught ? "TINAFT0" : "TINAFTO"}
           </button>
 
+          {/* Rendering του Μηνύματος Εξ Ουρανού */}
+          {showDivineMessage && (
+            <div className="divine-message-container">
+              <div className="divine-message-text">
+                {divineMessageText}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

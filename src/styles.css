@@ -225,3 +225,39 @@
     animation: lightning-flicker 5s infinite;
   }
 }
+.divine-message-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--night, #000); /* Κρατάει την οθόνη μαύρη */
+  z-index: 99999;
+  pointer-events: none; /* Επιτρέπει τα κλικ να περνάνε από κάτω αν χρειαστεί */
+}
+
+.divine-message-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.2rem;
+  text-align: center;
+  max-width: 80%;
+  line-height: 1.5;
+  /* Η μαγεία του fade in/out με θολούρα */
+  animation: blurFadeInOut 5s ease-in-out forwards;
+}
+
+@keyframes blurFadeInOut {
+  0% { opacity: 0; filter: blur(10px); transform: scale(0.95); }
+  20% { opacity: 1; filter: blur(0px); transform: scale(1); }
+  80% { opacity: 1; filter: blur(0px); transform: scale(1); }
+  100% { opacity: 0; filter: blur(10px); transform: scale(1.05); }
+}
+
+/* Προσαρμογή μεγέθους για κινητά */
+@media (max-width: 768px) {
+  .divine-message-text {
+    font-size: 1rem;
+    max-width: 90%;
+  }
+}
