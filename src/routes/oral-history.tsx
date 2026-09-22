@@ -3,6 +3,14 @@ import { useState, useRef, useEffect } from "react"
 
 export const Route = createFileRoute("/oral-history")({
   component: OralHistory,
+  errorComponent: ({ error }) => (
+    <div style={{ background: '#000', color: '#ff4d4d', padding: '4rem', fontFamily: 'Courier New', height: '100vh', zIndex: 999999, position: 'relative' }}>
+      <h2>// SYSTEM CRITICAL ERROR</h2>
+      <p style={{ margin: '1rem 0' }}>{error.message}</p>
+      <pre style={{ fontSize: '0.8rem', opacity: 0.7, background: '#111', padding: '1rem' }}>{error.stack}</pre>
+      <Link to="/" style={{ color: '#fff', display: 'inline-block', marginTop: '2rem' }}>[ RETURN_TO_CORE ]</Link>
+    </div>
+  ),
 })
 
 function OralHistory() {
