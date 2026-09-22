@@ -91,7 +91,6 @@ function RootComponent() {
 
   // Audio States
   const [isMuted, setIsMuted] = useState(false);
-  const [isAudioHovered, setIsAudioHovered] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Cursor States
@@ -99,7 +98,7 @@ function RootComponent() {
   const [isCursorHovering, setIsCursorHovering] = useState(false);
   const [isCursorVisible, setIsCursorVisible] = useState(false);
 
-  /* ================= AUDIO LOGIC ================= */
+  /* ================= AUDIO LOGIC (ΑΘΙΚΤΟ) ================= */
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio('https://www.dropbox.com/scl/fi/tj22a4t89jddj5ipuqadc/01-Addis.mp3?rlkey=9ezr7ao6nkrhogezblz93cer5&st=91vuun0m&raw=1');
@@ -165,23 +164,19 @@ function RootComponent() {
     };
   }, [navigate]);
 
-  /* ================= CURSOR LOGIC ================= */
+  /* ================= CURSOR LOGIC (ΑΘΙΚΤΟ) ================= */
   useEffect(() => {
     let currentHoverState = false;
 
     const updateCursor = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
-      // Έλεγχος: Είμαστε στο Intro interface (.void-root) ?
       const isIntro = !!(target && target.closest('.void-root'));
 
       if (isIntro) {
-        // Αν είμαστε στο intro, επαναφέρουμε τον κανονικό κέρσορα
         document.body.classList.remove('enable-custom-cursor');
         setIsCursorVisible(false);
         return; 
       } else {
-        // Αν μπήκαμε στο κυρίως site, ενεργοποιούμε τον Goth κέρσορα
         document.body.classList.add('enable-custom-cursor');
         setIsCursorVisible(true);
       }
@@ -227,26 +222,72 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       
-      {/* CURSOR CSS */}
+      {/* ================= CSS ΓΙΑ ΚΕΡΣΟΡΑ & MOBILE ================= */}
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Ο custom κέρσορας κρύβει τον default ΜΟΝΟ όταν το class 'enable-custom-cursor' είναι ενεργό (δηλαδή εκτός intro) */
+        /* Desktop: Ο custom κέρσορας */
         body.enable-custom-cursor * { cursor: none !important; }
-        
         .custom-cursor-container { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; }
-        
-        /* O Σταυρός μίκρυνε (scale: 0.75) με transform-origin για να χτυπάει ακριβώς στο κέντρο */
-        .cursor-cross { 
-          position: absolute; width: 32px; height: 32px; 
-          transform: translate(-16px, -14px) scale(0.75); 
-          transform-origin: 16px 14px; 
-        }
-        
+        .cursor-cross { position: absolute; width: 32px; height: 32px; transform: translate(-16px, -14px) scale(0.75); transform-origin: 16px 14px; }
         .cursor-knife { position: absolute; width: 32px; height: 32px; transform: translate(-2px, -30px); }
-        .blood-drop {
-          position: absolute; top: 30px; left: 2px; width: 2px; height: 3px; background-color: #aa0000;
-          border-left: 1px solid #ff4d4d; border-bottom: 1px solid #4a0000; animation: blood-drip 1.3s infinite cubic-bezier(0.4, 0, 1, 1);
-        }
+        .blood-drop { position: absolute; top: 30px; left: 2px; width: 2px; height: 3px; background-color: #aa0000; border-left: 1px solid #ff4d4d; border-bottom: 1px solid #4a0000; animation: blood-drip 1.3s infinite cubic-bezier(0.4, 0, 1, 1); }
         @keyframes blood-drip { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(20px); opacity: 0.9; } 100% { transform: translateY(30px); opacity: 0; } }
+
+        /* --- ΕΙΔΙΚΟΙ ΚΑΝΟΝΕΣ ΓΙΑ ΚΙΝΗΤΑ (MOBILE OPTIMIZATIONS) --- */
+        @media (max-width: 768px) {
+          /* 1. Εξαφάνιση custom κέρσορα */
+          .custom-cursor-container { display: none !important; }
+          body.enable-custom-cursor * { cursor: auto !important; }
+
+          /* 2. Flicker Effect (Αστραπή) στο φόντο */
+          @keyframes mobile-flicker {
+            0%, 100% { background-color: var(--night, #000); }
+            30% { background-color: var(--night, #000); }
+            31% { background-color: #1a1a1a; }
+            32% { background-color: var(--night, #000); }
+            33% { background-color: #0f0f0f; }
+            34% { background-color: var(--night, #000); }
+            70% { background-color: var(--night, #000); }
+            71% { background-color: #2a2a2a; }
+            72% { background-color: var(--night, #000); }
+          }
+          body { animation: mobile-flicker 6s infinite !important; }
+
+          /* 3. Δομή Μενού σε κάθετη στήλη */
+          .project-screen {
+            display: flex;
+            flex-direction: column !important;
+          }
+          .project-sidebar {
+            width: 100% !important;
+            position: relative !important;
+            height: auto !important;
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1rem 1.5rem !important;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .sidebar-nav {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+            margin-top: 1.5rem !important;
+            align-items: center;
+          }
+          .sidebar-intro {
+            margin: 1rem 0 !important;
+          }
+
+          /* 4. Προσαρμογή θέσης για το ηχειάκι (πάνω δεξιά για να μην πέφτει στο λογότυπο) */
+          .audio-mobile-btn {
+            top: 1rem !important;
+            right: 1rem !important;
+            left: auto !important;
+            background: rgba(0,0,0,0.6) !important;
+          }
+        }
       `}} />
 
       {/* CUSTOM CURSOR RENDER */}
@@ -334,11 +375,10 @@ function RootComponent() {
 
         <Outlet />
 
-        {/* ΚΟΥΜΠΙ ΗΧΟΥ (ΜΟΝΟ ΠΑΝΩ ΑΡΙΣΤΕΡΑ) */}
+        {/* ΚΟΥΜΠΙ ΗΧΟΥ (ΜΟΝΟ ΜΕ SVG ΕΙΚΟΝΙΔΙΑ) */}
         <button 
+          className="audio-mobile-btn"
           onClick={toggleMute}
-          onMouseEnter={() => setIsAudioHovered(true)}
-          onMouseLeave={() => setIsAudioHovered(false)}
           title={isMuted ? "Ενεργοποίηση Ήχου" : "Σίγαση"}
           style={{
             position: 'fixed',
@@ -347,33 +387,28 @@ function RootComponent() {
             background: 'var(--night, #000)',
             border: '1px solid rgba(255, 230, 160, 0.3)',
             color: isMuted ? 'rgba(255, 230, 160, 0.4)' : 'var(--cream)',
-            fontFamily: '"Courier New", Courier, monospace',
-            fontSize: '0.8rem',
-            letterSpacing: '2px',
-            padding: isAudioHovered ? '0.6rem 1.2rem' : '0.6rem',
+            padding: '0.8rem',
             cursor: 'pointer',
             zIndex: 9999,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '10px',
             transition: 'all 0.3s ease',
+            borderRadius: '4px'
           }}
         >
-          {isAudioHovered ? (
-            isMuted ? '[ AUDIO // MUTED ]' : '[ AUDIO // ON ]'
+          {isMuted ? (
+            /* Ηχειάκι με διαγώνια γραμμή (Muted) */
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
           ) : (
-            isMuted ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <line x1="1" y1="1" x2="23" y2="23"></line>
-              </svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
-            )
+            /* Απλό ηχειάκι (Unmuted) */
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
           )}
         </button>
       </div>

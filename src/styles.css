@@ -197,3 +197,31 @@
     grid-template-columns: 1fr;
   }
 }
+/* --- MOBILE OPTIMIZATIONS (ΚΙΝΗΤΑ) --- */
+
+/* 1. Εξαφάνιση custom κέρσορα και επαναφορά του κανονικού σε οθόνες αφής */
+@media (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+  /* Την ακριβή κλάση του δικού σας κέρσορα θα την κρύψουμε μόλις δω το root.tsx */
+}
+
+/* 2. Εφέ Flicker (Αστραπή) για το μαύρο φόντο στα κινητά */
+@keyframes lightning-flicker {
+  0%, 100% { opacity: 1; }
+  30% { opacity: 1; }
+  31% { opacity: 0.3; }
+  32% { opacity: 1; }
+  33% { opacity: 0.2; }
+  34% { opacity: 1; }
+  70% { opacity: 1; }
+  71% { opacity: 0.5; }
+  72% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .mobile-flicker-bg {
+    animation: lightning-flicker 5s infinite;
+  }
+}
