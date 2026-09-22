@@ -3,31 +3,33 @@ import { useState, useRef, useEffect } from "react"
 
 export const Route = createFileRoute("/oral-history")({
   component: OralHistory,
-  errorComponent: ({ error }) => (
-    <div style={{ background: '#000', color: '#ff4d4d', padding: '4rem', fontFamily: 'Courier New', height: '100vh', zIndex: 999999, position: 'relative' }}>
-      <h2>// SYSTEM CRITICAL ERROR</h2>
-      <p style={{ margin: '1rem 0' }}>{error.message}</p>
-      <pre style={{ fontSize: '0.8rem', opacity: 0.7, background: '#111', padding: '1rem' }}>{error.stack}</pre>
-      <Link to="/" style={{ color: '#fff', display: 'inline-block', marginTop: '2rem' }}>[ RETURN_TO_CORE ]</Link>
-    </div>
-  ),
 })
 
 function OralHistory() {
-  const [oralHistories] = useState(() => {
+  const [oralHistories, setOralHistories] = useState<any[]>([
+    {
+      id: "ORAL.HST.01",
+      title: "ΜΑΡΤΥΡΙΑ // ΣΥΛΛΟΓΗ 01",
+      description: "«Η μνήμη δεν είναι απλώς αυτό που έμεινε πίσω, αλλά αυτό που συνεχίζει να ασκεί πίεση στα πράγματα...»",
+      audioUrl: "/01 Addis.mp3",
+      author: "Αρχείο Μνήμης",
+      date: "2026-06-05",
+    },
+  ])
+
+  useEffect(() => {
     const saved = localStorage.getItem("folkography_oral_history")
-    if (saved) return JSON.parse(saved)
-    return [
-      {
-        id: "ORAL.HST.01",
-        title: "ΜΑΡΤΥΡΙΑ // ΣΥΛΛΟΓΗ 01",
-        description: "«Η μνήμη δεν είναι απλώς αυτό που έμεινε πίσω, αλλά αυτό που συνεχίζει να ασκεί πίεση στα πράγματα...»",
-        audioUrl: "/01 Addis.mp3",
-        author: "Αρχείο Μνήμης",
-        date: "2026-06-05",
-      },
-    ]
-  })
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setOralHistories(parsed)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }, [])
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
