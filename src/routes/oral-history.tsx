@@ -37,7 +37,6 @@ function OralHistory() {
 
   const currentItem = oralHistories[currentIndex] || oralHistories[0]
 
-  // Συνάρτηση για ασφαλή πλοήγηση (σταματάει τον ήχο)
   const changeIndex = (newIndex: number) => {
     if (audioRef.current) {
       audioRef.current.pause()
@@ -122,7 +121,6 @@ function OralHistory() {
         .deck-btn.primary { border-color: var(--rose); color: var(--rose); }
         .deck-btn.primary:hover { background: var(--rose); color: var(--night); }
 
-        /* --- ΝΕΟ: Navigation & Hover Menu --- */
         .doc-navigation {
           display: flex; justify-content: space-between;
           border-top: 1px solid rgba(206, 104, 117, 0.3);
@@ -167,7 +165,6 @@ function OralHistory() {
       <main className="oral-mainframe">
         <div className="preservation-bg"></div>
 
-        {/* --- NEO: Hover Sidebar Menu --- */}
         <div className="side-index-wrapper">
           <div className="side-index">
             <div style={{ fontSize: '0.65rem', letterSpacing: '2px', color: 'var(--rose)', marginBottom: '0.5rem' }}>// ΕΥΡΕΤΗΡΙΟ</div>
@@ -208,7 +205,6 @@ function OralHistory() {
             <a href={currentItem.audioUrl || "/01 Addis.mp3"} download className="deck-btn">[ EXTRACT DATA ]</a>
           </div>
 
-          {/* --- NEO: Bottom Arrow Navigation --- */}
           <div className="doc-navigation">
             {hasPrev ? (
               <span className="nav-arrow" onClick={() => changeIndex(currentIndex - 1)}>
