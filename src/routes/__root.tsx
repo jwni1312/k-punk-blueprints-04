@@ -11,7 +11,6 @@ import {
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -27,9 +26,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <main className="project-main">
@@ -98,7 +94,7 @@ function RootComponent() {
   const [isCursorHovering, setIsCursorHovering] = useState(false);
   const [isCursorVisible, setIsCursorVisible] = useState(false);
 
-  /* ================= AUDIO LOGIC (ΑΘΙΚΤΟ) ================= */
+  /* ================= AUDIO LOGIC ================= */
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio('https://www.dropbox.com/scl/fi/tj22a4t89jddj5ipuqadc/01-Addis.mp3?rlkey=9ezr7ao6nkrhogezblz93cer5&st=91vuun0m&raw=1');
@@ -164,7 +160,7 @@ function RootComponent() {
     };
   }, [navigate]);
 
-  /* ================= CURSOR LOGIC (ΑΘΙΚΤΟ) ================= */
+  /* ================= CURSOR LOGIC ================= */
   useEffect(() => {
     let currentHoverState = false;
 
@@ -223,7 +219,6 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Desktop: Ο custom κέρσορας */
         body.enable-custom-cursor * { cursor: none !important; }
         .custom-cursor-container { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; }
         .cursor-cross { position: absolute; width: 32px; height: 32px; transform: translate(-16px, -14px) scale(0.75); transform-origin: 16px 14px; }
@@ -231,13 +226,10 @@ function RootComponent() {
         .blood-drop { position: absolute; top: 30px; left: 2px; width: 2px; height: 3px; background-color: #aa0000; border-left: 1px solid #ff4d4d; border-bottom: 1px solid #4a0000; animation: blood-drip 1.3s infinite cubic-bezier(0.4, 0, 1, 1); }
         @keyframes blood-drip { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(20px); opacity: 0.9; } 100% { transform: translateY(30px); opacity: 0; } }
 
-        /* --- ΕΙΔΙΚΟΙ ΚΑΝΟΝΕΣ ΓΙΑ ΚΙΝΗΤΑ (MOBILE OPTIMIZATIONS) --- */
         @media (max-width: 768px) {
-          /* 1. Εξαφάνιση custom κέρσορα */
           .custom-cursor-container { display: none !important; }
           body.enable-custom-cursor * { cursor: auto !important; }
 
-          /* 2. Flicker Effect (Αστραπή) στο φόντο */
           @keyframes mobile-flicker {
             0%, 100% { background-color: var(--night, #000); }
             30% { background-color: var(--night, #000); }
@@ -251,57 +243,15 @@ function RootComponent() {
           }
           body { animation: mobile-flicker 6s infinite !important; }
 
-          /* 3. Δομή Μενού: Κεντράρισμα & Στήλη */
-          .project-screen {
-            display: flex;
-            flex-direction: column !important;
-          }
-          .project-sidebar {
-            width: 100% !important;
-            position: relative !important;
-            height: auto !important;
-            border: none !important; /* Αφαιρεί τις γραμμές */
-            padding: 5rem 1rem 1.5rem !important; /* Χώρος πάνω για το ηχειάκι */
-            text-align: center;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-          }
-          
-          /* 4. Αφαίρεση του κόκκινου τετραγώνου από το ΤΙΝΑΦΤΟ */
-          .sidebar-logo, .tinafto-monolith {
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 auto !important;
-            display: block !important;
-            text-align: center !important;
-          }
-
-          /* 5. Στοίχιση κατηγοριών κάθετα */
-          .sidebar-nav {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 1.5rem !important;
-            margin-top: 2rem !important;
-            align-items: center !important;
-            width: 100% !important;
-          }
-          .sidebar-intro {
-            display: none !important; /* Κρύβει το αγγλικό κειμενάκι στα κινητά για πιο καθαρό look */
-          }
-
-          /* 6. Ηχειάκι πάνω δεξιά */
-          .audio-mobile-btn {
-            top: 1rem !important;
-            right: 1rem !important;
-            left: auto !important;
-            background: rgba(0,0,0,0.6) !important;
-          }
+          .project-screen { display: flex; flex-direction: column !important; }
+          .project-sidebar { width: 100% !important; position: relative !important; height: auto !important; border: none !important; padding: 5rem 1rem 1.5rem !important; text-align: center; display: flex !important; flex-direction: column !important; align-items: center !important; }
+          .sidebar-logo, .tinafto-monolith { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 auto !important; display: block !important; text-align: center !important; }
+          .sidebar-nav { display: flex !important; flex-direction: column !important; gap: 1.5rem !important; margin-top: 2rem !important; align-items: center !important; width: 100% !important; }
+          .sidebar-intro { display: none !important; }
+          .audio-mobile-btn { top: 1rem !important; right: 1rem !important; left: auto !important; background: rgba(0,0,0,0.6) !important; }
         }
       `}} />
 
-      {/* CUSTOM CURSOR RENDER */}
       {isCursorVisible && (
         <div ref={cursorRef} className="custom-cursor-container">
           {!isCursorHovering ? (
@@ -353,12 +303,10 @@ function RootComponent() {
       <div className="project-screen">
         <aside className="project-sidebar">
           <div>
-            {/* Λογότυπο TINAFTO */}
             <Link to="/" className="sidebar-logo tinafto-monolith" style={{ color: 'var(--rose, #ff4d4d)' }}>
               TINAFTO
             </Link>
 
-            {/* Κάθετο Μενού */}
             <nav className="sidebar-nav" aria-label="Main navigation">
               <Link to="/writings" activeProps={{ className: "is-active" }}>
                 ΓΡΑΦΤΑ
@@ -381,7 +329,6 @@ function RootComponent() {
 
         <Outlet />
 
-        {/* ΚΟΥΜΠΙ ΗΧΟΥ */}
         <button 
           className="audio-mobile-btn"
           onClick={toggleMute}
