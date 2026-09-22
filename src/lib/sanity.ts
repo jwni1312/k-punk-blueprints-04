@@ -12,7 +12,22 @@ export async function getPosts() {
     *[_type == "post"] | order(publishedAt desc) {
       title,
       "slug": slug.current,
-      publishedAt
+      publishedAt,
+      "imageUrl": mainImage.asset->url,
+      "imageAlt": mainImage.alt
+    }
+  `)
+}
+export async function getProjects() {
+  return sanityClient.fetch(`
+    *[_type == "project"] | order(year desc) {
+      title,
+      "slug": slug.current,
+      year,
+      client,
+      tags,
+      "imageUrl": coverImage.asset->url,
+      "imageAlt": coverImage.alt
     }
   `)
 }

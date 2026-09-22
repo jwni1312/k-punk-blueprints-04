@@ -11,6 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EchotopiasRouteImport } from './routes/echotopias'
+import { Route as OralHistoryRouteImport } from './routes/oral-history'
+import { Route as PhilosophyRouteImport } from './routes/philosophy'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as WritingsRouteImport } from './routes/writings'
+import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
+import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +31,142 @@ const SlugRoute = SlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EchotopiasRoute = EchotopiasRouteImport.update({
+  id: '/echotopias',
+  path: '/echotopias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OralHistoryRoute = OralHistoryRouteImport.update({
+  id: '/oral-history',
+  path: '/oral-history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhilosophyRoute = PhilosophyRouteImport.update({
+  id: '/philosophy',
+  path: '/philosophy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WritingsRoute = WritingsRouteImport.update({
+  id: '/writings',
+  path: '/writings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProjectsRoute,
+} as any)
+const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ProjectsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/echotopias': typeof EchotopiasRoute
+  '/oral-history': typeof OralHistoryRoute
+  '/philosophy': typeof PhilosophyRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/writings': typeof WritingsRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/echotopias': typeof EchotopiasRoute
+  '/oral-history': typeof OralHistoryRoute
+  '/philosophy': typeof PhilosophyRoute
+  '/writings': typeof WritingsRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/echotopias': typeof EchotopiasRoute
+  '/oral-history': typeof OralHistoryRoute
+  '/philosophy': typeof PhilosophyRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/writings': typeof WritingsRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$slug'
+  fullPaths:
+    | '/'
+    | '/$slug'
+    | '/admin'
+    | '/contact'
+    | '/echotopias'
+    | '/oral-history'
+    | '/philosophy'
+    | '/projects'
+    | '/writings'
+    | '/projects/$slug'
+    | '/projects/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$slug'
-  id: '__root__' | '/' | '/$slug'
+  to:
+    | '/'
+    | '/$slug'
+    | '/admin'
+    | '/contact'
+    | '/echotopias'
+    | '/oral-history'
+    | '/philosophy'
+    | '/writings'
+    | '/projects/$slug'
+    | '/projects'
+  id:
+    | '__root__'
+    | '/'
+    | '/$slug'
+    | '/admin'
+    | '/contact'
+    | '/echotopias'
+    | '/oral-history'
+    | '/philosophy'
+    | '/projects'
+    | '/writings'
+    | '/projects/$slug'
+    | '/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
+  AdminRoute: typeof AdminRoute
+  ContactRoute: typeof ContactRoute
+  EchotopiasRoute: typeof EchotopiasRoute
+  OralHistoryRoute: typeof OralHistoryRoute
+  PhilosophyRoute: typeof PhilosophyRoute
+  ProjectsRoute: typeof ProjectsRouteWithChildren
+  WritingsRoute: typeof WritingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +185,96 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/echotopias': {
+      id: '/echotopias'
+      path: '/echotopias'
+      fullPath: '/echotopias'
+      preLoaderRoute: typeof EchotopiasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oral-history': {
+      id: '/oral-history'
+      path: '/oral-history'
+      fullPath: '/oral-history'
+      preLoaderRoute: typeof OralHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/philosophy': {
+      id: '/philosophy'
+      path: '/philosophy'
+      fullPath: '/philosophy'
+      preLoaderRoute: typeof PhilosophyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/writings': {
+      id: '/writings'
+      path: '/writings'
+      fullPath: '/writings'
+      preLoaderRoute: typeof WritingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/': {
+      id: '/projects/'
+      path: '/'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof ProjectsRoute
+    }
+    '/projects/$slug': {
+      id: '/projects/$slug'
+      path: '/$slug'
+      fullPath: '/projects/$slug'
+      preLoaderRoute: typeof ProjectsSlugRouteImport
+      parentRoute: typeof ProjectsRoute
+    }
   }
 }
+
+interface ProjectsRouteChildren {
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
+}
+
+const ProjectsRouteChildren: ProjectsRouteChildren = {
+  ProjectsSlugRoute: ProjectsSlugRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
+}
+
+const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
+  ProjectsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
+  AdminRoute: AdminRoute,
+  ContactRoute: ContactRoute,
+  EchotopiasRoute: EchotopiasRoute,
+  OralHistoryRoute: OralHistoryRoute,
+  PhilosophyRoute: PhilosophyRoute,
+  ProjectsRoute: ProjectsRouteWithChildren,
+  WritingsRoute: WritingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

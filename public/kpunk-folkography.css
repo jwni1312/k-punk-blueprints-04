@@ -466,9 +466,9 @@ body.konami::before {
 .index-list li {
   padding: 1.1rem 0;
   border-bottom: 1px solid var(--rule);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: baseline;
-  justify-content: space-between;
   gap: 1rem;
 }
 .index-list a {
@@ -509,3 +509,1963 @@ body.konami::before {
 }
 .solo-back a:hover { color: var(--blue-link); }
 .solo .post { margin: 0; }
+.index-list li {
+  grid-template-columns: 1fr auto;
+}
+
+.index-post-image {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 1rem;
+}
+.post-featured-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 2rem;
+}.site-nav {
+  margin: 1.5rem 0 2.5rem;
+  font-size: 0.9rem;
+}
+
+.site-nav a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.site-nav a:hover {
+  text-decoration-thickness: 2px;
+}
+.project-body {
+  max-width: 42rem;
+  margin-top: 2rem;
+  line-height: 1.65;
+}
+
+.project-body p {
+  margin: 0 0 1.25rem;
+}
+
+.project-external-link,
+.project-back-link {
+  margin-top: 2rem;
+}
+
+.project-external-link a,
+.project-back-link a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+/* ---------- PROJECT PAGE ---------- */
+
+.post {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 5rem;
+}
+
+.post article {
+    margin-top: 2rem;
+}
+
+.post-featured-image {
+    width: 100%;
+    display: block;
+    margin-bottom: 2rem;
+}
+
+.post header {
+    margin-bottom: 2rem;
+}
+
+.post h1 {
+    font-size: 2.4rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+.project-tags {
+    margin-top: .75rem;
+    color: #777;
+    font-size: .9rem;
+    letter-spacing: .03em;
+}
+
+.project-body {
+    margin-top: 2.5rem;
+    line-height: 1.8;
+}
+
+.project-body p {
+    margin-bottom: 1.4rem;
+}
+
+.project-body h2,
+.project-body h3 {
+    margin-top: 2.5rem;
+}
+
+.project-external-link {
+    margin-top: 3rem;
+}
+
+.project-back-link {
+    margin-top: 4rem;
+}
+.post-featured-image {
+    width:100%;
+    height:420px;
+    object-fit:cover;
+}
+/* ---------- INDIVIDUAL PROJECT PAGE ---------- */
+
+.post {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+.post article {
+  margin-top: 2rem;
+}
+
+.post-featured-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.post header {
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #d9e2ea;
+}
+
+.post h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.post .index-whisper {
+  margin-top: 0.75rem;
+}
+
+.project-tags {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  opacity: 0.65;
+}
+
+.project-body {
+  max-width: 42rem;
+  margin-top: 2.5rem;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.project-body p {
+  margin: 0 0 1.4rem;
+}
+
+.project-body h2,
+.project-body h3 {
+  margin: 2.5rem 0 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.project-body blockquote {
+  margin: 2rem 0;
+  padding-left: 1.25rem;
+  border-left: 1px solid currentColor;
+  font-style: italic;
+}
+
+.project-body ul,
+.project-body ol {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.project-body a,
+.project-external-link a,
+.project-back-link a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.project-external-link {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #d9e2ea;
+}
+
+.project-back-link {
+  margin-top: 4rem;
+}
+
+@media (max-width: 700px) {
+  .post {
+    padding: 1.5rem 1rem 4rem;
+  }
+
+ .post-featured-image {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  height: 420px;
+  object-fit: cover;
+  object-position: center;
+  margin: 2rem auto 3rem;
+}
+}
+/* ---------- PROJECT META ---------- */
+
+.project-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #d9e2ea;
+}
+
+.project-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0 0;
+}
+
+.project-meta div {
+  min-width: 0;
+}
+
+.project-meta dt {
+  margin-bottom: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.project-meta dd {
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 700px) {
+  .project-meta {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+/* =========================================================
+   FOLKOGRAPHY — DIGITAL NOTEBOOK SKIN
+   ========================================================= */
+
+:root {
+  --paper: #eee8d7;
+  --paper-dark: #ddd3bc;
+  --ink: #18251f;
+  --faded-ink: #687068;
+  --red: #a33b2b;
+  --blue: #b9d4df;
+  --green: #3e5949;
+  --line: rgba(24, 37, 31, 0.22);
+  --content-width: 1120px;
+}
+
+/* ---------- GLOBAL ---------- */
+
+html {
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(
+      to right,
+      transparent 0,
+      transparent 3.1rem,
+      rgba(163, 59, 43, 0.28) 3.1rem,
+      rgba(163, 59, 43, 0.28) 3.15rem,
+      transparent 3.15rem
+    ),
+    var(--paper);
+  color: var(--ink);
+  font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+::selection {
+  background: var(--blue);
+  color: var(--ink);
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--red);
+  text-decoration-thickness: 2px;
+}
+
+img {
+  filter: saturate(0.88) contrast(1.03);
+}
+
+/* ---------- SHARED NAVIGATION ---------- */
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 4.5rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-nav::before {
+  content: "§";
+  color: var(--red);
+  font-size: 1rem;
+}
+
+.site-nav a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+}
+
+.site-nav a:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* =========================================================
+   HOMEPAGE + PROJECT INDEX
+   ========================================================= */
+
+.index {
+  width: min(calc(100% - 8rem), var(--content-width));
+  margin: 0 auto;
+  padding: 5rem 0 8rem;
+}
+
+.index-mark {
+  position: relative;
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(3.8rem, 10vw, 8.5rem);
+  font-weight: 400;
+  line-height: 0.78;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
+}
+
+.index-mark::after {
+  content: "■";
+  display: inline-block;
+  margin-left: 0.12em;
+  color: var(--blue);
+  font-size: 0.28em;
+  vertical-align: top;
+  transform: translateY(0.12em);
+}
+
+.index-whisper {
+  max-width: 36rem;
+  margin: 2.2rem 0 4rem 18%;
+  color: var(--green);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.index-list {
+  counter-reset: notebook-entry;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ink);
+}
+
+.index-list li {
+  counter-increment: notebook-entry;
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  min-height: 5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.index-list li::before {
+  content: counter(notebook-entry, decimal-leading-zero);
+  grid-column: 1;
+  color: var(--red);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.index-list li:hover {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(185, 212, 223, 0.3),
+      transparent 68%
+    );
+}
+
+.index-list li > a {
+  grid-column: 2;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  line-height: 1.08;
+  text-decoration: none;
+}
+
+.index-list time {
+  grid-column: 3;
+  color: var(--faded-ink);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.index-post-image {
+  grid-column: 2 / -1;
+  width: min(100%, 820px);
+  max-height: 430px;
+  margin: 0 0 1.4rem;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--blue);
+}
+
+.project-client,
+.project-tags {
+  grid-column: 2 / -1;
+  margin-top: 0.25rem;
+  color: var(--faded-ink);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   INDIVIDUAL POST / PROJECT
+   ========================================================= */
+
+.post {
+  width: min(calc(100% - 8rem), var(--content-width));
+  margin: 0 auto;
+  padding: 4rem 0 8rem;
+}
+
+.post article {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(240px, 0.55fr);
+  column-gap: clamp(2rem, 7vw, 7rem);
+  align-items: start;
+}
+
+/* The image is an event, not a giant banner */
+
+.post-featured-image {
+  grid-column: 1 / -1;
+  width: min(82%, 880px);
+  height: min(58vh, 500px);
+  margin: 1rem 0 5rem 7%;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--ink);
+  box-shadow:
+    12px 12px 0 var(--blue),
+    13px 13px 0 var(--ink);
+}
+
+/* ---------- PROJECT HEADER ---------- */
+
+.project-header,
+.post article > header {
+  grid-column: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.project-header h1,
+.post article > header h1 {
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(3.6rem, 8.2vw, 8rem);
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
+}
+
+/* Small red editorial mark */
+
+.project-header h1::before,
+.post article > header h1::before {
+  content: "●";
+  display: block;
+  margin-bottom: 1.2rem;
+  color: var(--red);
+  font-family: sans-serif;
+  font-size: 0.18em;
+}
+
+/* ---------- PROJECT METADATA ---------- */
+
+.project-meta {
+  grid-column: 2;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  border-top: 2px solid var(--ink);
+}
+
+.project-meta div {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 1rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-meta dt {
+  margin: 0;
+  color: var(--red);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.project-meta dd {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+/* ---------- ARTICLE TEXT ---------- */
+
+.project-body,
+.post-body {
+  grid-column: 1;
+  max-width: 39rem;
+  margin-top: 6rem;
+  font-size: 1.08rem;
+  line-height: 1.82;
+}
+
+.project-body::before,
+.post-body::before {
+  content: "NOTES /";
+  display: block;
+  margin-bottom: 2.5rem;
+  color: var(--red);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.12em;
+}
+
+.project-body p,
+.post-body p {
+  margin: 0 0 1.55rem;
+}
+
+.project-body p:first-child::first-letter,
+.post-body p:first-child::first-letter {
+  float: left;
+  margin: 0.09em 0.12em 0 0;
+  color: var(--red);
+  font-size: 4.8rem;
+  line-height: 0.72;
+}
+
+.project-body h2,
+.project-body h3,
+.post-body h2,
+.post-body h3 {
+  margin: 3.5rem 0 1.25rem;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.project-body h2,
+.post-body h2 {
+  font-size: 2.2rem;
+}
+
+.project-body blockquote,
+.post-body blockquote {
+  position: relative;
+  margin: 3rem 0 3rem 12%;
+  padding: 1.25rem 0 1.25rem 2rem;
+  border-left: 4px solid var(--blue);
+  color: var(--green);
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.project-body blockquote::before,
+.post-body blockquote::before {
+  content: "“";
+  position: absolute;
+  top: -0.35em;
+  left: -0.05em;
+  color: var(--red);
+  font-size: 4.5rem;
+}
+
+.project-body ul,
+.project-body ol,
+.post-body ul,
+.post-body ol {
+  margin: 2rem 0;
+  padding-left: 1.4rem;
+}
+
+.project-body li,
+.post-body li {
+  margin-bottom: 0.5rem;
+}
+
+.project-body hr,
+.post-body hr {
+  width: 35%;
+  margin: 4.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--red);
+}
+
+/* ---------- LINKS / FOOTER ---------- */
+
+.project-external-link {
+  grid-column: 1;
+  margin-top: 4rem;
+}
+
+.project-external-link a {
+  display: inline-block;
+  padding: 0.55rem 0.75rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.project-external-link a:hover {
+  background: var(--red);
+  color: var(--paper);
+}
+
+.project-back-link {
+  margin-top: 7rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--ink);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   SUBTLE AGE / TEXTURE
+   ========================================================= */
+
+.index,
+.post {
+  position: relative;
+}
+
+.index::before,
+.post::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(24, 37, 31, 0.035) 4px
+    );
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+  body {
+    background:
+      linear-gradient(
+        to right,
+        transparent 0,
+        transparent 1rem,
+        rgba(163, 59, 43, 0.24) 1rem,
+        rgba(163, 59, 43, 0.24) 1.04rem,
+        transparent 1.04rem
+      ),
+      var(--paper);
+  }
+
+  .index,
+  .post {
+    width: calc(100% - 3.5rem);
+    padding-top: 2.5rem;
+  }
+
+  .index-mark {
+    font-size: clamp(3.4rem, 18vw, 6rem);
+  }
+
+  .index-whisper {
+    margin: 1.75rem 0 3rem;
+  }
+
+  .index-list li {
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.75rem;
+  }
+
+  .index-list li > a,
+  .index-list time,
+  .index-post-image,
+  .project-client,
+  .project-tags {
+    grid-column: 2;
+  }
+
+  .index-list time {
+    justify-self: start;
+  }
+
+  .index-post-image {
+    height: auto;
+    box-shadow: 5px 5px 0 var(--blue);
+  }
+
+  .post article {
+    display: block;
+  }
+
+  .post-featured-image {
+    width: calc(100% - 0.5rem);
+    height: auto;
+    max-height: 65vh;
+    margin: 1rem 0 3.5rem;
+    box-shadow:
+      6px 6px 0 var(--blue),
+      7px 7px 0 var(--ink);
+  }
+
+  .project-header h1,
+  .post article > header h1 {
+    max-width: none;
+    font-size: clamp(3.2rem, 17vw, 5.5rem);
+  }
+
+  .project-meta {
+    margin-top: 3rem;
+  }
+
+  .project-body,
+  .post-body {
+    margin-top: 4rem;
+    font-size: 1rem;
+  }
+
+  .project-body blockquote,
+  .post-body blockquote {
+    margin-left: 0;
+  }
+}
+/* =========================================================
+   FOLKOGRAPHY — EARLY WEBLOG OVERRIDE
+   restrained, text-first, circa 2008
+   ========================================================= */
+
+:root {
+  --page-bg: #cfdde2;
+  --content-bg: #f6f4ed;
+  --ink: #171717;
+  --muted: #626a6d;
+  --link: #244f78;
+  --link-hover: #8b2727;
+  --rule: #aebdc3;
+}
+
+/* ---------- PAGE ---------- */
+
+html {
+  background: var(--page-bg);
+}
+
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--ink);
+  font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+/* Remove the notebook line and artificial texture */
+
+body,
+.index::before,
+.post::before {
+  background-image: none;
+}
+
+::selection {
+  background: #b9ced8;
+  color: #000;
+}
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+img {
+  filter: none;
+}
+
+/* ---------- MAIN CONTAINERS ---------- */
+
+.index,
+.post {
+  box-sizing: border-box;
+  width: min(92%, 820px);
+  margin: 2rem auto;
+  padding: 2rem 2.4rem 4rem;
+  background: var(--content-bg);
+  border: 1px solid #aab7bc;
+  box-shadow: none;
+}
+
+/* ---------- NAV ---------- */
+
+.site-nav {
+  display: block;
+  margin: 0 0 2.2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.site-nav::before {
+  content: none;
+}
+
+.site-nav a {
+  border: 0;
+  text-decoration: underline;
+}
+
+/* ---------- HOMEPAGE / PROJECTS INDEX ---------- */
+
+.index-mark {
+  max-width: none;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: normal;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.index-mark::after {
+  content: none;
+}
+
+.index-whisper {
+  max-width: 34rem;
+  margin: 0.45rem 0 2.3rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.index-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.index-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  min-height: 0;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+}
+
+.index-list li::before {
+  content: none;
+}
+
+.index-list li:hover {
+  background: transparent;
+}
+
+.index-list li > a {
+  grid-column: 1;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  text-decoration: underline;
+}
+
+.index-list time {
+  grid-column: 2;
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
+.index-post-image {
+  grid-column: 1 / -1;
+  width: auto;
+  max-width: 100%;
+  max-height: 360px;
+  margin: 0 0 0.9rem;
+  object-fit: contain;
+  border: 0;
+  box-shadow: none;
+}
+
+.project-client,
+.project-tags {
+  grid-column: 1 / -1;
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---------- INDIVIDUAL PROJECT / POST ---------- */
+
+.post article {
+  display: block;
+}
+
+.post-featured-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 430px;
+  margin: 0 0 1.8rem;
+  object-fit: contain;
+  object-position: left top;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Much smaller titles */
+
+.project-header,
+.post article > header {
+  margin: 0 0 1.8rem;
+  padding: 0 0 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.project-header h1,
+.post article > header h1,
+.post h1 {
+  max-width: none;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: normal;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.project-header h1::before,
+.post article > header h1::before {
+  content: none;
+}
+
+/* ---------- METADATA ---------- */
+
+.project-meta {
+  display: block;
+  margin: 1rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.project-meta div {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  border: 0;
+}
+
+.project-meta dt {
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.project-meta dt::after {
+  content: ":";
+}
+
+.project-meta dd {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+/* ---------- BODY TEXT ---------- */
+
+.project-body,
+.post-body {
+  max-width: 620px;
+  margin-top: 1.8rem;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.project-body::before,
+.post-body::before {
+  content: none;
+}
+
+.project-body p,
+.post-body p {
+  margin: 0 0 1.15rem;
+}
+
+.project-body p:first-child::first-letter,
+.post-body p:first-child::first-letter {
+  float: none;
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.project-body h2,
+.post-body h2 {
+  margin: 2rem 0 0.8rem;
+  font-size: 1.3rem;
+  font-weight: normal;
+}
+
+.project-body h3,
+.post-body h3 {
+  margin: 1.7rem 0 0.7rem;
+  font-size: 1.08rem;
+  font-weight: bold;
+}
+
+.project-body blockquote,
+.post-body blockquote {
+  margin: 1.5rem 2rem;
+  padding: 0 0 0 1rem;
+  border-left: 2px solid var(--rule);
+  color: #444;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.project-body blockquote::before,
+.post-body blockquote::before {
+  content: none;
+}
+
+/* ---------- LOWER LINKS ---------- */
+
+.project-external-link {
+  margin-top: 2rem;
+}
+
+.project-external-link a {
+  display: inline;
+  padding: 0;
+  background: none;
+  color: var(--link);
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-transform: none;
+}
+
+.project-external-link a:hover {
+  background: none;
+  color: var(--link-hover);
+}
+
+.project-back-link {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 700px) {
+  .index,
+  .post {
+    width: calc(100% - 1rem);
+    margin: 0.5rem auto;
+    padding: 1.4rem 1.1rem 3rem;
+  }
+
+  .index-mark,
+  .project-header h1,
+  .post article > header h1,
+  .post h1 {
+    font-size: 1.65rem;
+  }
+
+  .index-list li {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .index-list time {
+    grid-column: 1;
+  }
+
+  .post-featured-image {
+    max-height: 55vh;
+  }
+
+  .project-meta div {
+    display: block;
+  }
+}
+/* =========================================================
+   FOLKOGRAPHY — DARK DIGITAL NOTEBOOK
+   ========================================================= */
+
+:root {
+  --night: #090808;
+  --night-soft: #100b0d;
+  --burgundy: #271015;
+  --burgundy-light: #3b181f;
+  --cream: #e8e1d5;
+  --cream-muted: #ada49d;
+  --rose: #ce6875;
+  --rose-dark: #743641;
+  --line-dark: rgba(206, 104, 117, 0.36);
+}
+
+/* ---------- Base ---------- */
+
+html,
+body {
+  min-height: 100%;
+  background: var(--night);
+  color: var(--cream);
+}
+
+body {
+  margin: 0;
+  font-family: Palatino, "Palatino Linotype", "Book Antiqua",
+    Georgia, serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 10% 15%,
+      rgba(91, 25, 38, 0.22),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 88% 60%,
+      rgba(87, 24, 33, 0.08),
+      transparent 42%
+    ),
+    linear-gradient(
+      115deg,
+      #10090c 0%,
+      #090808 43%,
+      #0b0a0a 100%
+    );
+}
+
+::selection {
+  background: var(--rose-dark);
+  color: var(--cream);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--rose);
+}
+
+/* ---------- Full project shell ---------- */
+
+.project-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  background: transparent;
+}
+
+/* ---------- Left sidebar ---------- */
+
+.project-sidebar {
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 1.8rem 2rem;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(48, 17, 25, 0.72),
+      rgba(22, 10, 14, 0.9)
+    );
+  border-right: 1px solid var(--rose-dark);
+}
+
+.sidebar-logo {
+  display: block;
+  color: var(--rose);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.28em;
+}
+
+.sidebar-intro {
+  margin: 1.7rem 0 2rem;
+  color: var(--cream-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  line-height: 1.85;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line-dark);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-nav span {
+  color: var(--cream-muted);
+}
+
+.sidebar-nav .is-active {
+  color: var(--rose);
+}
+
+.sidebar-current {
+  margin-top: 3rem;
+}
+
+.sidebar-section-title {
+  margin-bottom: 0.8rem;
+  color: var(--rose);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  text-transform: lowercase;
+}
+
+.sidebar-project-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  color: var(--cream);
+  font-size: 0.78rem;
+}
+
+.sidebar-project-link::before {
+  content: "•";
+  position: absolute;
+  margin-left: -1rem;
+  color: var(--rose);
+}
+
+.sidebar-project-link span:last-child {
+  color: var(--cream-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.67rem;
+}
+
+.sidebar-footer {
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--line-dark);
+  color: var(--cream-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.65rem;
+  line-height: 1.4;
+}
+
+/* ---------- Main project area ---------- */
+
+.project-main {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1250px;
+  padding: 2.8rem 3.5rem 6rem;
+}
+
+.project-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2.2rem;
+  color: var(--cream);
+  font-size: 0.82rem;
+}
+
+.project-topbar nav {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.project-topbar nav span:last-child {
+  color: var(--rose);
+}
+
+.project-search {
+  color: var(--cream-muted);
+  font-size: 0.75rem;
+}
+
+/* ---------- Hero ---------- */
+
+.project-hero {
+  width: 100%;
+  height: clamp(300px, 45vw, 485px);
+  margin: 0 0 3.5rem;
+  overflow: hidden;
+  background: var(--burgundy);
+}
+
+.project-hero img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  filter:
+    saturate(0.55)
+    sepia(0.13)
+    contrast(1.06)
+    brightness(0.78);
+  transition:
+    filter 500ms ease,
+    transform 900ms ease;
+}
+
+.project-hero:hover img {
+  filter:
+    saturate(0.7)
+    sepia(0.08)
+    contrast(1.03)
+    brightness(0.88);
+  transform: scale(1.006);
+}
+
+/* ---------- Lower two-column layout ---------- */
+
+.project-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: start;
+}
+
+.project-writing {
+  min-width: 0;
+}
+
+.project-title-block h1 {
+  max-width: 12ch;
+  margin: 0;
+  color: var(--cream);
+  font-size: clamp(3rem, 5.3vw, 5.2rem);
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.project-title-mark {
+  display: block;
+  margin: 1.3rem 0 1.4rem;
+  color: var(--rose);
+  font-size: 1.25rem;
+}
+
+/* ---------- Writing ---------- */
+
+.project-body {
+  max-width: 580px;
+  margin: 0;
+  color: var(--cream);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.project-body p {
+  margin: 0 0 1.6rem;
+}
+
+.project-body p:first-child {
+  color: var(--rose);
+  font-style: italic;
+}
+
+.project-body h2 {
+  margin: 3rem 0 1rem;
+  color: var(--cream);
+  font-size: 1.55rem;
+  font-weight: normal;
+}
+
+.project-body h3 {
+  margin: 2.4rem 0 0.8rem;
+  color: var(--rose);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-body blockquote {
+  margin: 2.5rem 0;
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--rose-dark);
+  color: var(--cream-muted);
+  font-style: italic;
+}
+
+.project-body a {
+  color: var(--rose);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* ---------- Metadata rail ---------- */
+
+.project-information {
+  border-left: 1px solid var(--rose-dark);
+  padding-left: 2rem;
+}
+
+.information-row {
+  padding: 0 0 1.6rem;
+  margin-bottom: 1.6rem;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.information-row > span {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--rose);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.information-row p {
+  margin: 0;
+  color: var(--cream);
+  font-size: 0.9rem;
+}
+
+.information-row a {
+  color: var(--rose);
+  font-size: 0.85rem;
+}
+
+/* ---------- Bottom navigation ---------- */
+
+.project-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rose-dark);
+  color: var(--rose);
+  font-size: 0.82rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 950px) {
+  .project-screen {
+    display: block;
+  }
+
+  .project-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+    padding: 1.5rem;
+  }
+
+  .sidebar-intro,
+  .sidebar-current,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+  }
+
+  .project-main {
+    padding: 2rem 1.5rem 5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .project-topbar {
+    display: block;
+  }
+
+  .project-search {
+    display: none;
+  }
+
+  .project-hero {
+    height: 55vw;
+    min-height: 230px;
+    margin-bottom: 2.5rem;
+  }
+
+  .project-content-grid {
+    display: block;
+  }
+
+  .project-title-block h1 {
+    max-width: none;
+    font-size: clamp(2.8rem, 14vw, 4.5rem);
+  }
+
+  .project-information {
+    margin-top: 4rem;
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--rose-dark);
+    padding-top: 2rem;
+  }
+}
+.sidebar-projects-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-project-link {
+  position: relative;
+}
+
+.sidebar-project-link.is-current {
+  color: var(--cream);
+}
+
+.sidebar-project-link.is-current::before {
+  content: "•";
+  position: absolute;
+  left: -1rem;
+  color: var(--rose);
+}
+
+.sidebar-archive {
+  margin-top: 2.5rem;
+}
+
+.sidebar-archive > span {
+  display: block;
+  padding: 0.2rem 0;
+  color: var(--cream-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.68rem;
+}
+/* =========================================================
+   PROJECTS INDEX — DARK ARCHIVE
+   ========================================================= */
+
+.projects-index-main {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1250px;
+  padding: 2.8rem 3.5rem 6rem;
+}
+
+.projects-index-header {
+  max-width: 760px;
+  margin: 4rem 0 5rem;
+}
+
+.projects-index-kicker {
+  margin: 0 0 0.8rem;
+  color: var(--rose);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.projects-index-header h1 {
+  margin: 0;
+  color: var(--cream);
+  font-size: clamp(3rem, 6vw, 5.8rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.projects-index-header > p:last-child {
+  max-width: 520px;
+  margin: 1.5rem 0 0;
+  color: var(--cream-muted);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.projects-index-list {
+  border-top: 1px solid var(--rose-dark);
+}
+
+.projects-index-entry {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1.6rem;
+  padding: 2.2rem 0;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.projects-index-number {
+  padding-top: 0.35rem;
+  color: var(--rose);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.projects-index-entry-main {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.projects-index-image-link {
+  display: block;
+  overflow: hidden;
+  background: var(--burgundy);
+}
+
+.projects-index-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  display: block;
+  object-fit: cover;
+  filter:
+    saturate(0.52)
+    sepia(0.12)
+    contrast(1.05)
+    brightness(0.78);
+  transition:
+    filter 450ms ease,
+    transform 850ms ease;
+}
+
+.projects-index-image-link:hover .projects-index-image {
+  filter:
+    saturate(0.72)
+    sepia(0.06)
+    contrast(1.03)
+    brightness(0.9);
+  transform: scale(1.012);
+}
+
+.projects-index-text {
+  padding-top: 0.25rem;
+}
+
+.projects-index-title {
+  display: inline-block;
+  max-width: 14ch;
+  color: var(--cream);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1.05;
+}
+
+.projects-index-title:hover {
+  color: var(--rose);
+}
+
+.projects-index-meta {
+  margin: 1rem 0 0;
+  color: var(--cream-muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+}
+
+.projects-index-tags {
+  margin: 0.55rem 0 0;
+  color: var(--rose);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 800px) {
+  .projects-index-main {
+    padding: 2rem 1.5rem 5rem;
+  }
+
+  .projects-index-header {
+    margin: 3rem 0 4rem;
+  }
+
+  .projects-index-entry {
+    grid-template-columns: 2rem 1fr;
+    gap: 0.8rem;
+  }
+
+  .projects-index-entry-main {
+    display: block;
+  }
+
+  .projects-index-text {
+    margin-top: 1.2rem;
+  }
+
+  .projects-index-title {
+    max-width: none;
+  }
+}
+/* ---------- GATEWAY AD BUTTON (XP GLITCH) ---------- */
+.gateway-ad-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+  height: 65px;
+  margin: 3.5rem 0;
+  
+  /* The jarring early-2000s compromised palette */
+  background: #0000aa; /* classic Windows BSOD blue */
+  color: #00ff00;      /* harsh terminal green */
+  border: 3px dotted #ff00ff; /* magenta */
+  
+  /* Breaking the typographical rules of the site */
+  font-family: "Comic Sans MS", "Times New Roman", monospace;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  text-transform: none;
+  
+  cursor: crosshair;
+  position: relative;
+  box-shadow: 6px 6px 0px #ffff00; /* acid yellow drop shadow */
+  animation: xp-glitch 2.2s infinite linear alternate-reverse;
+  z-index: 50;
+}
+
+/* On hover, it breaks entirely */
+/* ---------- HAUNTED ENTITY ---------- */
+.haunted-entity {
+  position: fixed; /* Untethers it from the page */
+  width: 260px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Harsh machine aesthetic */
+  background: #000;
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+  
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  
+  z-index: 9999; /* Forces it over everything */
+  cursor: crosshair;
+  pointer-events: auto;
+  
+  /* A subtle, constant digital vibration */
+  animation: micro-glitch 0.05s infinite;
+}
+
+.haunted-entity:hover {
+  background: #ff0000;
+  color: #000;
+}
+
+@keyframes micro-glitch {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-1px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-2px, 0); }
+  80% { transform: translate(1px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+/* ---------- THE VOID & FLASHLIGHT ---------- */
+.void-gateway {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 10000; /* Covers the entire site */
+  overflow: hidden;
+  cursor: none; /* Hide the default cursor to heighten the flashlight effect */
+}
+
+/* The Joyce Letters */
+.joyce-text {
+  position: absolute;
+  inset: 0;
+  padding: 4rem;
+  color: var(--cream);
+  font-family: "Times New Roman", serif;
+  font-size: 1.5rem;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+  
+  /* CSS mask creates the flashlight effect using JS mouse coordinates */
+  -webkit-mask-image: radial-gradient(
+    circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+    black 0%, 
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+    black 0%, 
+    transparent 100%
+  );
+  
+  transition: opacity 1s ease;
+}
+
+/* ---------- THE "TINAFTO" WAVE ---------- */
+.tinafto-wave {
+  position: absolute;
+  top: -100vh;
+  left: 0;
+  width: 100vw;
+  height: 300vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  color: #ff0000;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1;
+  text-transform: uppercase;
+  word-break: break-all;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tinafto-wave.is-crashing {
+  opacity: 0.5;
+  animation: wave-fall 8s linear forwards;
+}
+
+@keyframes wave-fall {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50vh); }
+}
+
+/* ---------- ENTITY OVERRIDES ---------- */
+.haunted-entity.is-caught {
+  /* When caught, it snaps to the center, stops vibrating, and turns white */
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  animation: none;
+  background: #000;
+  color: var(--cream);
+  border-color: var(--cream);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+  cursor: default;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
