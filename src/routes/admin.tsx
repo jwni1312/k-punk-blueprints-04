@@ -14,7 +14,6 @@ function AdminPanel() {
   const [showPassword, setShowPassword] = useState(false)
   const [activeTab, setActiveTab] = useState<"soundscapes" | "oralHistory" | "writings" | "philosophy" | "contact" | "announcement" | "purgatory">("soundscapes")
 
-  // --- EXISTING CATEGORIES ---
   const [soundArchives, setSoundArchives] = useState(() => {
     const saved = localStorage.getItem("folkography_sound_archives")
     return saved ? JSON.parse(saved) : []
@@ -40,24 +39,26 @@ function AdminPanel() {
     return saved ? JSON.parse(saved) : { email: "", location: "", note: "" }
   })
 
-  // --- BROADCAST ---
+  // --- BROADCAST (Επιδιόρθωση αποθήκευσης) ---
   const [announcementMsg, setAnnouncementMsg] = useState("")
   const [activeAnnouncement, setActiveAnnouncement] = useState(() => {
     const saved = localStorage.getItem("folkography_announcement")
     if (saved) {
-      const parsed = JSON.parse(saved)
-      if (parsed.expiresAt && Date.now() < parsed.expiresAt) return parsed
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed.expiresAt && Date.now() < parsed.expiresAt) return parsed
+      } catch (e) {
+        console.error(e)
+      }
     }
     return null
   })
 
-  // --- PURGATORY DRAFTS ---
   const [drafts, setDrafts] = useState(() => {
     const saved = localStorage.getItem("folkography_purgatory_drafts")
     return saved ? JSON.parse(saved) : []
   })
 
-  // Form States
   const [title, setTitle] = useState("")
   const [extraField1, setExtraField1] = useState("")
   const [extraField2, setExtraField2] = useState("")
@@ -67,7 +68,6 @@ function AdminPanel() {
   const [contactLocation, setContactLocation] = useState(contactInfo.location)
   const [contactNote, setContactNote] = useState(contactInfo.note)
 
-  // Sync to LocalStorage
   useEffect(() => { localStorage.setItem("folkography_sound_archives", JSON.stringify(soundArchives)) }, [soundArchives])
   useEffect(() => { localStorage.setItem("folkography_oral_history", JSON.stringify(oralHistories)) }, [oralHistories])
   useEffect(() => { localStorage.setItem("folkography_writings", JSON.stringify(writings)) }, [writings])
@@ -139,13 +139,21 @@ function AdminPanel() {
   const handleBroadcast = (e: React.FormEvent) => {
     e.preventDefault()
     if (!announcementMsg.trim()) return
+    
+    // Ορισμός 24ώρου
     const expiresAt = Date.now() + 24 * 60 * 60 * 1000
-    setActiveAnnouncement({ message: announcementMsg, expiresAt })
+    const newBroadcast = { message: announcementMsg.trim(), expiresAt }
+    
+    setActiveAnnouncement(newBroadcast)
+    localStorage.setItem("folkography_announcement", JSON.stringify(newBroadcast))
     setAnnouncementMsg("")
-    alert("ΕΚΠΟΜΠΗ ΕΝΕΡΓΗ. Το μήνυμα θα αυτοκαταστραφεί σε 24 ώρες.")
+    alert("ΕΚΠΟΜΠΗ ΕΝΕΡΓΗ. Το μήνυμα αποθηκεύτηκε και θα εμφανιστεί στην αρχική οθόνη.")
   }
 
-  const handleClearBroadcast = () => { setActiveAnnouncement(null) }
+  const handleClearBroadcast = () => { 
+    setActiveAnnouncement(null)
+    localStorage.removeItem("folkography_announcement")
+  }
 
   const handleApproveDraft = (draft: any) => {
     const currentDate = new Date().toISOString().split('T')[0]
@@ -193,14 +201,11 @@ function AdminPanel() {
         .back-nav { font-size: 0.85rem; text-decoration: none; color: var(--cream); opacity: 0.6; letter-spacing: 2px; }
         .back-nav:hover { opacity: 1; color: var(--rose); }
         .login-box { max-width: 450px; margin: 10vh auto; background: rgba(0, 0, 0, 0.9); border: 1px solid var(--rose); padding: 3rem; display: flex; flex-direction: column; gap: 1.5rem; }
-        
         .input-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
         .login-input, .admin-input, .admin-textarea { background: transparent; border: 1px solid rgba(255, 230, 160, 0.3); color: var(--cream); padding: 0.8rem; padding-right: 2.5rem; font-family: "Courier New", Courier, monospace; font-size: 0.9rem; width: 100%; outline: none; }
         .login-input:focus, .admin-input:focus, .admin-textarea:focus { border-color: var(--rose); }
-        
         .eye-btn { position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: rgba(255, 230, 160, 0.4); display: flex; align-items: center; padding: 0; }
         .eye-btn:hover { color: var(--rose); }
-
         .admin-btn { background: transparent; border: 1px solid var(--rose); color: var(--rose); padding: 0.8rem 1.5rem; font-family: "Courier New", Courier, monospace; letter-spacing: 2px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; }
         .admin-btn:hover { background: var(--rose); color: var(--night); }
         .admin-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
@@ -237,7 +242,6 @@ function AdminPanel() {
                 onMouseLeave={() => setShowPassword(false)}
                 onTouchStart={() => setShowPassword(true)}
                 onTouchEnd={() => setShowPassword(false)}
-                title="Κράτησε πατημένο για εμφάνιση"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   {showPassword ? (

@@ -31,9 +31,13 @@ function Index() {
   const [isCaught, setIsCaught] = useState(skipIntro)
   const [isEntered, setIsEntered] = useState(skipIntro) 
   
-  // States για το Μήνυμα Εξ Ουρανού
   const [showDivineMessage, setShowDivineMessage] = useState(false)
   const [divineMessageText, setDivineMessageText] = useState("")
+
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authInput, setAuthInput] = useState("")
+  const [authError, setAuthError] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   
   const velocity = useRef({ dx: 1.5, dy: 1.5 })
   const btnRef = useRef<HTMLButtonElement>(null)
@@ -53,7 +57,7 @@ function Index() {
       if (isCaught) return
 
       let randomStr = ""
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 5; i++) {
         randomStr += chars.charAt(Math.floor(Math.random() * chars.length))
       }
       
@@ -66,10 +70,10 @@ function Index() {
         if (btnRef.current && !isCaught) {
           btnRef.current.innerText = "TINAFT0"
         }
-      }, 150)
+      }, 200)
     }
 
-    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove, { passive: true })
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       clearTimeout(timeoutId)
@@ -128,20 +132,22 @@ function Index() {
       btnRef.current.style.transform = ""
     }
 
-    // Διαβάζουμε το μήνυμα απευθείας από το LocalStorage (το Admin panel σου)
     let activeMessage = ""
     const saved = localStorage.getItem("folkography_announcement")
     
     if (saved) {
-      const parsed = JSON.parse(saved)
-      if (parsed.expiresAt && Date.now() < parsed.expiresAt) {
-        activeMessage = parsed.message
-      } else {
-        localStorage.removeItem("folkography_announcement")
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed.expiresAt && Date.now() < parsed.expiresAt) {
+          activeMessage = parsed.message
+        } else {
+          localStorage.removeItem("folkography_announcement")
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
 
-    // Αν υπάρχει ενεργό μήνυμα, το δείχνουμε για 5 δευτερόλεπτα
     if (activeMessage) {
       setDivineMessageText(activeMessage)
       setShowDivineMessage(true)
@@ -158,7 +164,21 @@ function Index() {
 
   const handleTinaftoTripleClick = (e: React.MouseEvent) => {
     if (e.detail === 3) {
+      setShowAuthModal(true)
+    }
+  }
+
+  const handleUnifiedAuth = (e: React.FormEvent) => {
+    e.preventDefault()
+    const cleanKey = authInput.trim()
+
+    if (cleanKey === "otanhmounamikros13") {
       navigate({ to: '/admin' })
+    } else if (cleanKey === "motherearthwillkillusall67") {
+      navigate({ to: '/purgatorio' })
+    } else {
+      setAuthError("INVALID CLEARANCE KEY")
+      setAuthInput("")
     }
   }
 
@@ -205,7 +225,16 @@ function Index() {
         .contact-corner a { color: var(--cream); opacity: 0.5; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; transition: all 0.2s; text-shadow: 0px 2px 8px rgba(0,0,0,0.8); }
         .contact-corner a:hover { opacity: 1; color: var(--rose); }
 
-        /* CSS για το "Μήνυμα Εξ Ουρανού" */
+        .auth-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999999; display: flex; align-items: center; justify-content: center; }
+        .auth-card { background: #000; border: 1px solid var(--rose); padding: 3rem; width: 400px; display: flex; flex-direction: column; gap: 1.5rem; text-align: center; }
+        .input-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
+        .auth-input { background: transparent; border: 1px solid rgba(255, 230, 160, 0.3); color: var(--cream); padding: 0.8rem; padding-right: 2.5rem; font-family: "Courier New", Courier, monospace; font-size: 0.9rem; width: 100%; outline: none; }
+        .auth-input:focus { border-color: var(--rose); }
+        .eye-btn { position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: rgba(255, 230, 160, 0.4); display: flex; align-items: center; padding: 0; }
+        .eye-btn:hover { color: var(--rose); }
+        .auth-submit-btn { background: transparent; border: 1px solid var(--rose); color: var(--rose); padding: 0.8rem; font-family: "Courier New", Courier, monospace; letter-spacing: 2px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; }
+        .auth-submit-btn:hover { background: var(--rose); color: var(--night); }
+
         .divine-message-container { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.95); z-index: 99999; pointer-events: none; }
         .divine-message-text { color: rgba(255, 255, 255, 0.9); font-family: "Courier New", Courier, monospace; font-size: 1.2rem; text-align: center; max-width: 80%; line-height: 1.5; animation: blurFadeInOut 5s ease-in-out forwards; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
         @keyframes blurFadeInOut { 0% { opacity: 0; filter: blur(10px); transform: scale(0.95); } 15% { opacity: 1; filter: blur(0px); transform: scale(1); } 85% { opacity: 1; filter: blur(0px); transform: scale(1); } 100% { opacity: 0; filter: blur(10px); transform: scale(1.05); } }
@@ -227,6 +256,52 @@ function Index() {
           <Link to="/contact">CONTACT</Link>
         </div>
       </main>
+
+      {showAuthModal && (
+        <div className="auth-overlay">
+          <form onSubmit={handleUnifiedAuth} className="auth-card">
+            <h3 style={{ fontSize: '1rem', letterSpacing: '2px', color: 'var(--rose)', margin: 0 }}>[ SYSTEM GATEWAY ]</h3>
+            <div className="input-wrapper">
+              <input 
+                type={showPassword ? "text" : "password"} 
+                placeholder="ENTER CLEARANCE..." 
+                value={authInput} 
+                onChange={(e) => setAuthInput(e.target.value)} 
+                className="auth-input" 
+                autoFocus 
+              />
+              <button 
+                type="button" 
+                className="eye-btn"
+                onMouseDown={() => setShowPassword(true)}
+                onMouseUp={() => setShowPassword(false)}
+                onMouseLeave={() => setShowPassword(false)}
+                onTouchStart={() => setShowPassword(true)}
+                onTouchEnd={() => setShowPassword(false)}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  {showPassword ? (
+                    <>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </>
+                  ) : (
+                    <>
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </>
+                  )}
+                </svg>
+              </button>
+            </div>
+            {authError && <span style={{ fontSize: '0.75rem', color: 'var(--rose)' }}>{authError}</span>}
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button type="submit" className="auth-submit-btn" style={{ flex: 1 }}>[ ENTER ]</button>
+              <button type="button" className="auth-submit-btn" style={{ flex: 1, borderColor: '#666', color: '#888' }} onClick={() => setShowAuthModal(false)}>[ CANCEL ]</button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {!skipIntro && (
         <div className={`void-root ${isEntered ? "entered" : ""}`}>
@@ -250,7 +325,6 @@ function Index() {
             {!isCaught ? "TINAFT0" : "TINAFTO"}
           </button>
 
-          {/* Rendering του Μηνύματος Εξ Ουρανού */}
           {showDivineMessage && (
             <div className="divine-message-container">
               <div className="divine-message-text">
