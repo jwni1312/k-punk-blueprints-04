@@ -60,8 +60,8 @@ function AdminPanel() {
   })
 
   const [title, setTitle] = useState("")
-  const [extraField1, setExtraField1] = useState("")
-  const [extraField2, setExtraField2] = useState("")
+  const [extraField1, setExtraField1] = useState("") // Χρησιμοποιείται για Audio URL τώρα
+  const [extraField2, setExtraField2] = useState("") // Ήταν location, ίσως δεν το θες πια?
   const [content, setContent] = useState("")
   const [author, setAuthor] = useState("")
   const [contactEmail, setContactEmail] = useState(contactInfo.email)
@@ -100,18 +100,21 @@ function AdminPanel() {
 
     const currentDate = new Date().toISOString().split('T')[0]
     const finalAuthor = author.trim() ? author.trim() : "Folkography Admin"
+    // Χρησιμοποιούμε το extraField1 για το audio URL
+    const finalAudioUrl = extraField1.trim() ? extraField1.trim() : "/01 Addis.mp3"
 
     if (activeTab === "soundscapes") {
       const newItem = {
         id: `ARCHIVE.SND.0${soundArchives.length + 1}`, title: title.toUpperCase(),
-        duration: extraField1 || "00:00:00", location: extraField2 || "ΑΓΝΩΣΤΗ ΤΟΠΟΘΕΣΙΑ",
-        description: content || "Χωρίς περιγραφή.", audioUrl: "/01 Addis.mp3", author: finalAuthor, date: currentDate,
+        // Αν το extraField2 δεν χρησιμοποιείται για τοποθεσία πια, βάλε μια default τιμή
+        duration: "00:00:00", location: extraField2 || "ΑΓΝΩΣΤΗ ΤΟΠΟΘΕΣΙΑ",
+        description: content || "Χωρίς περιγραφή.", audioUrl: finalAudioUrl, author: finalAuthor, date: currentDate,
       }
       setSoundArchives([...soundArchives, newItem])
     } else if (activeTab === "oralHistory") {
       const newItem = {
         id: `ORAL.HST.0${oralHistories.length + 1}`, title: title.toUpperCase(),
-        description: content || "Χωρίς περιγραφή μνήμης.", audioUrl: "/01 Addis.mp3", author: finalAuthor, date: currentDate,
+        description: content || "Χωρίς περιγραφή μνήμης.", audioUrl: finalAudioUrl, author: finalAuthor, date: currentDate,
       }
       setOralHistories([...oralHistories, newItem])
     } else if (activeTab === "writings") {
@@ -327,6 +330,11 @@ function AdminPanel() {
                   <div className="form-grid">
                     <input type="text" placeholder="ΤΙΤΛΟΣ" value={title} onChange={(e) => setTitle(e.target.value)} className="admin-input" required />
                     <input type="text" placeholder="ΣΥΓΓΡΑΦΕΑΣ" value={author} onChange={(e) => setAuthor(e.target.value)} className="admin-input" />
+                    
+                    {/* ΝΕΟ ΠΕΔΙΟ AUDIO URL */}
+                    {(activeTab === "soundscapes" || activeTab === "oralHistory") && (
+                       <input type="text" placeholder="AUDIO URL (π.χ. από Dropbox)" value={extraField1} onChange={(e) => setExtraField1(e.target.value)} className="admin-input" style={{ gridColumn: '1 / -1' }}/>
+                    )}
                   </div>
                   <textarea placeholder="ΚΕΙΜΕΝΟ..." value={content} onChange={(e) => setContent(e.target.value)} className="admin-textarea" rows={4} />
                   <button type="submit" className="admin-btn" style={{ alignSelf: 'flex-start' }}>[ ΑΠΟΘΗΚΕΥΣΗ ]</button>

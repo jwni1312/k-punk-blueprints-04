@@ -26,6 +26,9 @@ function Purgatorio() {
   const [category, setCategory] = useState("writings")
   const [content, setContent] = useState("")
   const [author, setAuthor] = useState("")
+  
+  // ΝΕΟ: Πεδίο για το Audio URL
+  const [audioUrl, setAudioUrl] = useState("")
 
   const [drafts, setDrafts] = useState(() => {
     const saved = localStorage.getItem("folkography_purgatory_drafts")
@@ -48,7 +51,6 @@ function Purgatorio() {
         setIsAuthenticated(true)
         setErrorMsg("")
       } else {
-        // Στον γρίφο δεν δείχνουμε κόκκινο μήνυμα, απλά καθαρίζουμε το input
         setInputKey("")
       }
     } else {
@@ -62,7 +64,7 @@ function Purgatorio() {
 
         if (newCount >= 3) {
           setIsRiddleMode(true)
-          setErrorMsg("") // Καθαρίζουμε το error msg για να μείνει μόνο η λευκή ερώτηση
+          setErrorMsg("") 
         } else {
           setErrorMsg(`ΛΑΘΟΣ ΚΩΔΙΚΟΣ. ΠΡΟΣΠΑΘΕΙΣ: ${newCount}/3`)
         }
@@ -79,12 +81,14 @@ function Purgatorio() {
       title: title.toUpperCase(),
       category,
       content,
+      // Στέλνουμε και το URL. Αν είναι άδειο, παίρνει ένα default.
+      audioUrl: audioUrl.trim() ? audioUrl.trim() : "/01 Addis.mp3",
       author: author.trim() ? author.trim() : "Ανώνυμος",
       date: new Date().toISOString().split('T')[0]
     }
 
     setDrafts([...drafts, newDraft])
-    setTitle(""); setContent(""); setAuthor("")
+    setTitle(""); setContent(""); setAuthor(""); setAudioUrl("")
     alert("ΤΟ ΚΕΙΜΕΝΟ ΣΤΑΛΘΗΚΕ ΣΤΟ ΠΟΥΡΓΚΑΤΟΡΙΟ. ΑΝΑΜΕΝΕΙ ΚΡΙΣΗ.")
   }
 
@@ -110,6 +114,11 @@ function Purgatorio() {
         .auth-btn:hover { background: #1a1a1a; color: #fff; border-color: #fff; }
         .draft-section { background: rgba(0, 0, 0, 0.6); border: 1px solid #1a1a1a; padding: 3rem; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        @media (max-width: 768px) {
+          .purgatory-mainframe { padding: 2rem 1.5rem; }
+          .form-grid { grid-template-columns: 1fr; }
+        }
       `}} />
 
       <main className="purgatory-mainframe">
@@ -173,7 +182,6 @@ function Purgatorio() {
                 />
               </>
             )}
-            {/* Εμφανίζει σφάλμα ΜΟΝΟ αν δεν είμαστε σε riddle mode */}
             {!isRiddleMode && errorMsg && <span style={{ fontSize: '0.8rem', color: '#ff4d4d' }}>{errorMsg}</span>}
             <button type="submit" className="auth-btn">[ ΕΙΣΟΔΟΣ ]</button>
           </form>
@@ -188,12 +196,25 @@ function Purgatorio() {
                 <input type="text" placeholder="ΤΙΤΛΟΣ" value={title} onChange={(e) => setTitle(e.target.value)} className="draft-input" required />
                 <input type="text" placeholder="ΣΥΓΓΡΑΦΕΑΣ (Προαιρετικό)" value={author} onChange={(e) => setAuthor(e.target.value)} className="draft-input" />
               </div>
+              
               <select value={category} onChange={(e) => setCategory(e.target.value)} className="draft-select">
                 <option value="writings">ΓΡΑΦΤΑ</option>
                 <option value="philosophy">ΦΙΛΟΣΟΦΙΑ</option>
                 <option value="oralHistory">ΠΡΟΦΟΡΙΚΗ ΙΣΤΟΡΙΑ</option>
                 <option value="soundscapes">ΗΧΟΤΟΠΙΑ</option>
               </select>
+
+              {/* ΝΕΟ: Εμφάνιση του URL Input μόνο αν η κατηγορία χρειάζεται ήχο */}
+              {(category === "oralHistory" || category === "soundscapes") && (
+                <input 
+                  type="text" 
+                  placeholder="AUDIO URL (Link από Dropbox, κλπ.)" 
+                  value={audioUrl} 
+                  onChange={(e) => setAudioUrl(e.target.value)} 
+                  className="draft-input" 
+                />
+              )}
+
               <textarea placeholder="ΚΕΙΜΕΝΟ..." value={content} onChange={(e) => setContent(e.target.value)} className="draft-textarea" rows={8} required />
               <button type="submit" className="auth-btn" style={{ alignSelf: 'center', marginTop: '1rem' }}>[ ΥΠΟΒΟΛΗ ΣΤΟ ΠΟΥΡΓΚΑΤΟΡΙΟ ]</button>
             </form>
