@@ -15,42 +15,9 @@ interface EchotopiaItem {
   author: string;
   date: string;
 }
-
-const defaultArchives: EchotopiaItem[] = [
-  {
-    id: "ARCHIVE.SND.01",
-    title: "ΝΥΧΤΕΡΙΝΗ_ΒΡΟΧΗ_ΣΕ_ΤΣΙΓΚΟ",
-    duration: "04:20:15",
-    location: "Αθήνα, Κέντρο - Οδός Θεμιστοκλέους",
-    description: "Καταγραφή βροχόπτωσης επί τριών ωρών σε μεταλλική επιφάνεια μπαλκονιού. Περιλαμβάνει απομακρυσμένες σειρήνες και τον υπόγειο παλμό της κυκλοφορίας.",
-    audioUrl: "/background-music.mp3", 
-    author: "System Admin",
-    date: "2026-06-01",
-  },
-  {
-    id: "ARCHIVE.SND.02",
-    title: "ΜΗΧΑΝΙΚΟΣ_ΠΑΛΜΟΣ_ΛΙΜΑΝΙΟΥ",
-    duration: "01:15:40",
-    location: "Πειραιάς - Πύλη Ε3",
-    description: "Ήχοι από γερανογέφυρες, αλύσους πλοίων και μεταλλικούς τόνους ανάμεσα σε φορτηγά. Η ηχογράφηση έγινε στις 04:00 το πρωί.",
-    audioUrl: "/background-music.mp3",
-    author: "System Admin",
-    date: "2026-06-02",
-  },
-  {
-    id: "ARCHIVE.SND.03",
-    title: "ΕΣΩΤΕΡΙΚΟΣ_ΧΩΡΟΣ_ΚΑΦΕΝΕΙΟΥ",
-    duration: "02:50:00",
-    location: "Επαρχία - Ορεινή Αρκαδία",
-    description: "Χαμηλές συχνότητες από ομιλίες στο βάθος, το ανακάτεμα της ζάχαρης σε ποτήρι και το ραδιόφωνο στα μεσαία κύματα να παίζει παλιά λαϊκά.",
-    audioUrl: "/background-music.mp3",
-    author: "System Admin",
-    date: "2026-06-03",
-  },
-]
-
+ 
 function Echotopias() {
-  const [soundArchives, setSoundArchives] = useState<EchotopiaItem[]>(defaultArchives)
+  const [soundArchives, setSoundArchives] = useState<EchotopiaItem[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem("folkography_sound_archives")

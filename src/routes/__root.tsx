@@ -7,6 +7,7 @@ import {
   HeadContent,
   Scripts,
   useNavigate,
+  useLocation,
 } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import appCss from "../styles.css?url";
@@ -58,7 +59,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: "/kpunk-folkography.css" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      // Προφόρτωση βαριών εικόνων
       { rel: "preload", as: "image", href: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1920px-The_Garden_of_earthly_delights.jpg" },
       { rel: "preload", as: "image", href: "https://i.postimg.cc/QtyVSZ34/grandma.jpg" }
     ],
@@ -86,6 +86,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const navigate = useNavigate();
+  const location = useLocation(); // Διαβάζει το τρέχον URL
 
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -96,7 +97,6 @@ function RootComponent() {
 
   useEffect(() => {
     if (!audioRef.current) {
-      // Νέο, σωστό link με raw=1
       audioRef.current = new Audio('https://www.dropbox.com/scl/fi/tj22a4t89jddj5ipuqadc/01-Addis.mp3?rlkey=9ezr7ao6nkrhogezblz93cer5&st=91vuun0m&raw=1');
     }
     
@@ -241,11 +241,24 @@ function RootComponent() {
           border-radius: 4px;
         }
 
+        /* ΝΕΟ: CSS ΓΙΑ TO PAGE TRANSITION */
+        .page-transition-wrapper {
+          animation: pageFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+
+        @keyframes pageFadeIn {
+          0% { opacity: 0; filter: blur(10px); }
+          100% { opacity: 1; filter: blur(0); }
+        }
+
         @media (max-width: 768px) {
           .custom-cursor-container { display: none !important; }
           body.enable-custom-cursor * { cursor: auto !important; }
 
-          /* Το ηχειάκι κατεβαίνει κάτω δεξιά για να μην ενοχλεί το μενού/header */
           .audio-global-btn {
             top: auto !important;
             bottom: 1.5rem !important;
@@ -333,7 +346,10 @@ function RootComponent() {
           </div>
         </aside>
 
-        <Outlet />
+        {/* ΝΕΟ: Εφαρμογή του animation με βάση το URL */}
+        <div key={location.pathname} className="page-transition-wrapper">
+          <Outlet />
+        </div>
 
         <button 
           className="audio-global-btn"

@@ -14,7 +14,7 @@ const defaultArchive = {
 }
 
 function Writings() {
-  const [items, setItems] = useState<any[]>([defaultArchive])
+  const [items, setItems] = useState<any[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem("folkography_writings")

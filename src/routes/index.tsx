@@ -244,7 +244,7 @@ function Index() {
         .compass-container { position: relative; width: 60vw; max-width: 700px; height: 60vh; max-height: 600px; border: 1px solid rgba(255, 230, 160, 0.15); display: flex; align-items: center; justify-content: center; }
         .tinafto-monolith { position: relative; font-size: 3.5rem; font-weight: bold; letter-spacing: 0.4em; margin: 0; margin-right: -0.4em; color: var(--rose); opacity: 0.9; font-family: "Courier New", Courier, monospace; text-shadow: 0px 4px 15px rgba(206, 104, 117, 0.4); user-select: none; z-index: 2; cursor: pointer; }
         .dir-node { position: absolute; text-decoration: none; color: var(--rose); font-weight: normal; letter-spacing: 4px; font-size: 1.2rem; background: var(--night); padding: 0 1rem; transition: all 0.3s ease; text-shadow: 0px 2px 10px rgba(0,0,0,0.9); text-transform: uppercase; }
-        .dir-node:hover { color: var(--cream); text-shadow: 0px 0px 8px var(--rose); transform: scale(1.05); }
+        .dir-node:hover { color: var(--cream); text-shadow: 0px 0px 8px var(--rose); transform: none; }
         
         .node-top { top: 0; left: 50%; transform: translate(-50%, -50%); }
         .node-bottom { bottom: 0; left: 50%; transform: translate(-50%, 50%); }

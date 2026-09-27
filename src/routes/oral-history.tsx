@@ -14,17 +14,8 @@ interface ArchiveItem {
   date: string;
 }
 
-const defaultArchive: ArchiveItem = {
-  id: "ORAL.HST.01",
-  title: "ΜΑΡΤΥΡΙΑ // ΣΥΛΛΟΓΗ 01",
-  description: "«Η μνήμη δεν είναι απλώς αυτό που έμεινε πίσω, αλλά αυτό που συνεχίζει να ασκεί πίεση στα πράγματα...»",
-  audioUrl: "/01 Addis.mp3",
-  author: "Αρχείο Μνήμης",
-  date: "2026-06-05",
-}
-
 function OralHistory() {
-  const [oralHistories, setOralHistories] = useState<ArchiveItem[]>([defaultArchive])
+  const [oralHistories, setOralHistories] = useState<ArchiveItem[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem("folkography_oral_history")
@@ -57,7 +48,7 @@ function OralHistory() {
     }
   }, [])
 
-  const currentItem = oralHistories[currentIndex] || oralHistories[0] || defaultArchive
+  const currentItem = oralHistories[currentIndex] || oralHistories[0] || null
   const hasNext = currentIndex < oralHistories.length - 1
   const hasPrev = currentIndex > 0
 

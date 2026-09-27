@@ -5,16 +5,8 @@ export const Route = createFileRoute("/philosophy")({
   component: Philosophy,
 })
 
-const defaultArchive = {
-  id: "PHIL.01",
-  title: "Ο ΠΕΙΡΑΣΜΟΣ ΤΟΥ ΠΕΙΡΑΣΜΟΥ",
-  content: "Φιλοσοφική μελέτη και αποδόμηση των εννοιών.",
-  author: "Ε. Λ.",
-  date: "2026-06-10",
-}
-
 function Philosophy() {
-  const [items, setItems] = useState<any[]>([defaultArchive])
+  const [items, setItems] = useState<any[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem("folkography_philosophy")
