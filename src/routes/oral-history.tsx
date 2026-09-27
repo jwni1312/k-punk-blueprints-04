@@ -5,7 +5,16 @@ export const Route = createFileRoute("/oral-history")({
   component: OralHistory,
 })
 
-const defaultArchive = {
+interface ArchiveItem {
+  id: string;
+  title: string;
+  description: string;
+  audioUrl: string;
+  author: string;
+  date: string;
+}
+
+const defaultArchive: ArchiveItem = {
   id: "ORAL.HST.01",
   title: "ΜΑΡΤΥΡΙΑ // ΣΥΛΛΟΓΗ 01",
   description: "«Η μνήμη δεν είναι απλώς αυτό που έμεινε πίσω, αλλά αυτό που συνεχίζει να ασκεί πίεση στα πράγματα...»",
@@ -15,7 +24,7 @@ const defaultArchive = {
 }
 
 function OralHistory() {
-  const [oralHistories, setOralHistories] = useState<any[]>([defaultArchive])
+  const [oralHistories, setOralHistories] = useState<ArchiveItem[]>([defaultArchive])
 
   useEffect(() => {
     const saved = localStorage.getItem("folkography_oral_history")
@@ -49,8 +58,11 @@ function OralHistory() {
   }, [])
 
   const currentItem = oralHistories[currentIndex] || oralHistories[0] || defaultArchive
+  const hasNext = currentIndex < oralHistories.length - 1
+  const hasPrev = currentIndex > 0
 
   const changeIndex = (newIndex: number) => {
+    if (newIndex < 0 || newIndex >= oralHistories.length) return;
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
@@ -62,6 +74,10 @@ function OralHistory() {
   const handlePlayToggle = () => {
     if (!audioRef.current) {
       audioRef.current = new Audio(currentItem.audioUrl || "/01 Addis.mp3")
+      // Κλείνει σωστά το Play button όταν τελειώσει το ηχητικό
+      audioRef.current.addEventListener('ended', () => {
+        setIsPlaying(false)
+      })
     }
 
     if (isPlaying) {
@@ -79,8 +95,35 @@ function OralHistory() {
     }
   }
 
-  const hasNext = currentIndex < oralHistories.length - 1
-  const hasPrev = currentIndex > 0
+  // --- SWIPE GESTURE LOGIC ---
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
+  const minSwipeDistance = 50
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX
+  }
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return
+    const distance = touchStartX.current - touchEndX.current
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe && hasNext) {
+      changeIndex(currentIndex + 1)
+    } else if (isRightSwipe && hasPrev) {
+      changeIndex(currentIndex - 1)
+    }
+    
+    // Reset values
+    touchStartX.current = null
+    touchEndX.current = null
+  }
 
   return (
     <>
@@ -91,7 +134,7 @@ function OralHistory() {
           position: fixed; top: 0; left: 0; right: 0; bottom: 0;
           background-color: var(--night, #000); color: var(--cream);
           font-family: "Courier New", Courier, monospace; padding: 5rem 6rem;
-          overflow-y: auto; z-index: 10;
+          overflow-y: auto; overflow-x: hidden; z-index: 10;
         }
 
         .preservation-bg {
@@ -108,8 +151,8 @@ function OralHistory() {
           border-bottom: 1px solid rgba(255, 230, 160, 0.2); padding-bottom: 1.5rem;
         }
         .sys-header { font-size: 0.85rem; opacity: 0.7; letter-spacing: 2px; color: var(--rose); }
-        .back-nav { font-size: 0.85rem; text-decoration: none; color: var(--cream); opacity: 0.6; letter-spacing: 2px; transition: all 0.3s; }
-        .back-nav:hover { opacity: 1; color: var(--rose); }
+        .back-nav { font-size: 1rem; font-weight: bold; text-decoration: none; color: var(--cream); opacity: 0.7; letter-spacing: 2px; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .back-nav:hover { opacity: 1; color: var(--rose); transform: translateX(-5px); }
         
         .oral-container {
           position: relative; z-index: 2; max-width: 800px; margin: 0 auto;
@@ -135,7 +178,7 @@ function OralHistory() {
         .deck-btn.primary:hover { background: var(--rose); color: var(--night); }
 
         .doc-navigation {
-          display: flex; justify-content: space-between;
+          display: flex; justify-content: space-between; position: relative;
           border-top: 1px solid rgba(206, 104, 117, 0.3);
           padding-top: 1.5rem; margin-top: 1.5rem;
         }
@@ -164,14 +207,18 @@ function OralHistory() {
         .oral-container { animation: archiveFadeIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
         @media (max-width: 768px) {
-          .oral-mainframe { padding: 2rem 1.5rem !important; }
-          .top-nav-bar { flex-direction: column; gap: 1.2rem; align-items: flex-start; padding-bottom: 1rem; margin-bottom: 2rem; }
-          .sys-header, .back-nav { font-size: 0.75rem; }
-          .oral-container { padding: 1.5rem; }
+          .oral-mainframe { padding: 1.5rem 1rem !important; }
+          .top-nav-bar { flex-direction: row; gap: 1rem; align-items: center; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+          .sys-header { display: none; }
+          .back-nav { font-size: 1.1rem; }
+          .oral-container { padding: 1.5rem; gap: 1.5rem; }
           .oral-title { font-size: 1.1rem; line-height: 1.4; }
           .player-deck { flex-direction: column; align-items: stretch; gap: 0.8rem; }
           .deck-btn { text-align: center; width: 100%; box-sizing: border-box; padding: 1rem; }
           .side-index-wrapper { display: none; }
+          
+          .doc-navigation { opacity: 0.4; border-top-style: dashed; }
+          .doc-navigation::after { content: '← SWIPE →'; position: absolute; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 3px; color: var(--rose); opacity: 0.5; margin-top: 5px; }
         }
       `}} />
 
@@ -194,11 +241,16 @@ function OralHistory() {
         </div>
 
         <div className="top-nav-bar">
+          <Link to="/" className="back-nav"><span>←</span> <span>BACK</span></Link>
           <div className="sys-header">ΑΡΧΕΙΟ ΠΡΟΦΟΡΙΚΗΣ ΙΣΤΟΡΙΑΣ</div>
-          <Link to="/" className="back-nav">[ ESC / RETURN_TO_CORE ]</Link>
         </div>
 
-        <div className="oral-container">
+        <div 
+          className="oral-container"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div>
             <h1 className="oral-title">{currentItem?.title}</h1>
             <span className="oral-subtitle">
@@ -221,13 +273,13 @@ function OralHistory() {
           <div className="doc-navigation">
             {hasPrev ? (
               <span className="nav-arrow" onClick={() => changeIndex(currentIndex - 1)}>
-                ← ΠΡΟΗΓΟΥΜΕΝΟ
+                ← PREV
               </span>
             ) : <div />}
             
             {hasNext ? (
               <span className="nav-arrow" onClick={() => changeIndex(currentIndex + 1)}>
-                ΕΠΟΜΕΝΟ →
+                NEXT →
               </span>
             ) : <div />}
           </div>

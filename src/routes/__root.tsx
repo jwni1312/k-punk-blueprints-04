@@ -9,7 +9,6 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -51,7 +50,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" },
       { title: "TINAFTO" },
       { name: "description", content: "TINAFTO digital space." },
     ],
@@ -59,6 +58,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: "/kpunk-folkography.css" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Προφόρτωση βαριών εικόνων
+      { rel: "preload", as: "image", href: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1920px-The_Garden_of_earthly_delights.jpg" },
+      { rel: "preload", as: "image", href: "https://i.postimg.cc/QtyVSZ34/grandma.jpg" }
     ],
   }),
   shellComponent: RootShell,
@@ -85,18 +87,16 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const navigate = useNavigate();
 
-  // Audio States
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Cursor States
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isCursorHovering, setIsCursorHovering] = useState(false);
   const [isCursorVisible, setIsCursorVisible] = useState(false);
 
-  /* ================= AUDIO LOGIC ================= */
   useEffect(() => {
     if (!audioRef.current) {
+      // Νέο, σωστό link με raw=1
       audioRef.current = new Audio('https://www.dropbox.com/scl/fi/tj22a4t89jddj5ipuqadc/01-Addis.mp3?rlkey=9ezr7ao6nkrhogezblz93cer5&st=91vuun0m&raw=1');
     }
     
@@ -160,7 +160,6 @@ function RootComponent() {
     };
   }, [navigate]);
 
-  /* ================= CURSOR LOGIC ================= */
   useEffect(() => {
     let currentHoverState = false;
 
@@ -217,7 +216,6 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      
       <style dangerouslySetInnerHTML={{ __html: `
         body.enable-custom-cursor * { cursor: none !important; }
         .custom-cursor-container { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; }
@@ -226,29 +224,69 @@ function RootComponent() {
         .blood-drop { position: absolute; top: 30px; left: 2px; width: 2px; height: 3px; background-color: #aa0000; border-left: 1px solid #ff4d4d; border-bottom: 1px solid #4a0000; animation: blood-drip 1.3s infinite cubic-bezier(0.4, 0, 1, 1); }
         @keyframes blood-drip { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(20px); opacity: 0.9; } 100% { transform: translateY(30px); opacity: 0; } }
 
+        .audio-global-btn {
+          position: fixed;
+          top: 2rem;
+          left: 2rem;
+          background: var(--night, #000);
+          border: 1px solid rgba(255, 230, 160, 0.3);
+          color: var(--cream);
+          padding: 0.7rem;
+          cursor: pointer;
+          z-index: 99999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          border-radius: 4px;
+        }
+
         @media (max-width: 768px) {
           .custom-cursor-container { display: none !important; }
           body.enable-custom-cursor * { cursor: auto !important; }
 
-          @keyframes mobile-flicker {
-            0%, 100% { background-color: var(--night, #000); }
-            30% { background-color: var(--night, #000); }
-            31% { background-color: #1a1a1a; }
-            32% { background-color: var(--night, #000); }
-            33% { background-color: #0f0f0f; }
-            34% { background-color: var(--night, #000); }
-            70% { background-color: var(--night, #000); }
-            71% { background-color: #2a2a2a; }
-            72% { background-color: var(--night, #000); }
+          /* Το ηχειάκι κατεβαίνει κάτω δεξιά για να μην ενοχλεί το μενού/header */
+          .audio-global-btn {
+            top: auto !important;
+            bottom: 1.5rem !important;
+            right: 1.5rem !important;
+            left: auto !important;
+            padding: 0.6rem !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            border-color: rgba(206, 104, 117, 0.4) !important;
           }
-          body { animation: mobile-flicker 6s infinite !important; }
 
-          .project-screen { display: flex; flex-direction: column !important; }
-          .project-sidebar { width: 100% !important; position: relative !important; height: auto !important; border: none !important; padding: 5rem 1rem 1.5rem !important; text-align: center; display: flex !important; flex-direction: column !important; align-items: center !important; }
-          .sidebar-logo, .tinafto-monolith { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 auto !important; display: block !important; text-align: center !important; }
-          .sidebar-nav { display: flex !important; flex-direction: column !important; gap: 1.5rem !important; margin-top: 2rem !important; align-items: center !important; width: 100% !important; }
-          .sidebar-intro { display: none !important; }
-          .audio-mobile-btn { top: 1rem !important; right: 1rem !important; left: auto !important; background: rgba(0,0,0,0.6) !important; }
+          .project-screen {
+            display: flex;
+            flex-direction: column !important;
+          }
+
+          .project-sidebar {
+            width: 100% !important;
+            position: relative !important;
+            height: auto !important;
+            border-bottom: 1px solid rgba(255, 230, 160, 0.2) !important;
+            padding: 1.5rem 1rem !important;
+            text-align: center;
+          }
+
+          .sidebar-logo {
+            font-size: 1.6rem !important;
+            margin-bottom: 1rem !important;
+          }
+
+          .sidebar-nav {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 0.8rem 1.2rem !important;
+          }
+
+          .sidebar-nav a {
+            font-size: 0.8rem !important;
+            letter-spacing: 1px !important;
+          }
         }
       `}} />
 
@@ -256,45 +294,23 @@ function RootComponent() {
         <div ref={cursorRef} className="custom-cursor-container">
           {!isCursorHovering ? (
             <div className="cursor-cross">
-              <svg width="32" height="32" viewBox="0 0 32 32" shapeRendering="crispEdges" style={{ filter: 'drop-shadow(2px 3px 0px rgba(0,0,0,0.9))' }}>
+              <svg width="32" height="32" viewBox="0 0 32 32" shapeRendering="crispEdges">
                 <rect x="14" y="2" width="4" height="28" fill="#1a1a1a" />
                 <rect x="4" y="12" width="24" height="4" fill="#1a1a1a" />
-                <rect x="12" y="0" width="8" height="4" fill="#1a1a1a" />
-                <rect x="12" y="28" width="8" height="4" fill="#1a1a1a" />
-                <rect x="0" y="10" width="4" height="8" fill="#1a1a1a" />
-                <rect x="28" y="10" width="4" height="8" fill="#1a1a1a" />
                 <rect x="15" y="3" width="2" height="26" fill="#a3a3a3" />
                 <rect x="5" y="13" width="22" height="2" fill="#a3a3a3" />
-                <rect x="13" y="1" width="6" height="2" fill="#c0c0c0" />
-                <rect x="13" y="29" width="6" height="2" fill="#808080" />
-                <rect x="1" y="11" width="2" height="4" fill="#c0c0c0" />
-                <rect x="29" y="11" width="2" height="4" fill="#808080" />
-                <rect x="15" y="3" width="1" height="26" fill="#e5e5e5" />
-                <rect x="5" y="13" width="22" height="1" fill="#e5e5e5" />
-                <rect x="13" y="11" width="6" height="6" fill="#1a1a1a" />
                 <rect x="14" y="12" width="4" height="4" fill="#4a0000" />
-                <rect x="15" y="13" width="2" height="2" fill="#b30000" />
-                <rect x="15" y="13" width="1" height="1" fill="#ff4d4d" />
               </svg>
             </div>
           ) : (
             <div className="cursor-knife">
-              <svg width="32" height="32" viewBox="0 0 32 32" shapeRendering="crispEdges" style={{ filter: 'drop-shadow(2px 2px 0px rgba(0,0,0,0.8))' }}>
+              <svg width="32" height="32" viewBox="0 0 32 32" shapeRendering="crispEdges">
                 <path d="M28,2 L32,6 L22,16 L18,12 Z" fill="#1a1a1a"/>
-                <path d="M28,4 L30,6 L22,14 L20,12 Z" fill="#4a3018"/>
-                <rect x="25" y="8" width="2" height="2" fill="#808080"/> 
-                <rect x="22" y="11" width="2" height="2" fill="#808080"/> 
-                <path d="M14,10 L20,16 L18,18 L12,12 Z" fill="#1a1a1a"/>
-                <path d="M15,11 L19,15 L18,16 L14,12 Z" fill="#555"/>
                 <path d="M15,14 L17,16 L4,29 L1,27 Z" fill="#1a1a1a"/> 
                 <path d="M14,14 L16,16 L3,29 L1,27 Z" fill="#b3b3b3"/> 
-                <path d="M13,14 L15,16 L2,29 L1,27 Z" fill="#ffffff"/> 
-                <path d="M1,27 L5,26 L4,29 L1,30 Z" fill="#660000"/>
-                <path d="M2,28 L4,27 L3,29 L1,30 Z" fill="#b30000"/>
                 <rect x="2" y="29" width="1" height="1" fill="#ff3333"/> 
               </svg>
               <div className="blood-drop" />
-              <div className="blood-drop" style={{ animationDelay: '0.6s', left: '4px', top: '28px', opacity: 0.8 }} />
             </div>
           )}
         </div>
@@ -303,26 +319,16 @@ function RootComponent() {
       <div className="project-screen">
         <aside className="project-sidebar">
           <div>
-            <Link to="/" className="sidebar-logo tinafto-monolith" style={{ color: 'var(--rose, #ff4d4d)' }}>
+            <Link to="/" className="sidebar-logo" style={{ color: 'var(--rose, #ff4d4d)' }}>
               TINAFTO
             </Link>
 
             <nav className="sidebar-nav" aria-label="Main navigation">
-              <Link to="/writings" activeProps={{ className: "is-active" }}>
-                ΓΡΑΦΤΑ
-              </Link>
-              <Link to="/philosophy" activeProps={{ className: "is-active" }}>
-                ΦΙΛΟΣΟΦΙΑ
-              </Link>
-              <Link to="/oral-history" activeProps={{ className: "is-active" }}>
-                ΠΡΟΦΟΡΙΚΗ ΙΣΤΟΡΙΑ
-              </Link>
-              <Link to="/echotopias" activeProps={{ className: "is-active" }}>
-                ΗΧΟΤΟΠΙΑ
-              </Link>
-              <Link to="/contact" activeProps={{ className: "is-active" }}>
-                CONTACT
-              </Link>
+              <Link to="/writings" activeProps={{ className: "is-active" }}>ΓΡΑΦΤΑ</Link>
+              <Link to="/philosophy" activeProps={{ className: "is-active" }}>ΦΙΛΟΣΟΦΙΑ</Link>
+              <Link to="/oral-history" activeProps={{ className: "is-active" }}>ΠΡΟΦΟΡΙΚΗ ΙΣΤΟΡΙΑ</Link>
+              <Link to="/echotopias" activeProps={{ className: "is-active" }}>ΗΧΟΤΟΠΙΑ</Link>
+              <Link to="/contact" activeProps={{ className: "is-active" }}>CONTACT</Link>
             </nav>
           </div>
         </aside>
@@ -330,33 +336,17 @@ function RootComponent() {
         <Outlet />
 
         <button 
-          className="audio-mobile-btn"
+          className="audio-global-btn"
           onClick={toggleMute}
           title={isMuted ? "Ενεργοποίηση Ήχου" : "Σίγαση"}
-          style={{
-            position: 'fixed',
-            top: '2rem',
-            left: '2rem',
-            background: 'var(--night, #000)',
-            border: '1px solid rgba(255, 230, 160, 0.3)',
-            color: isMuted ? 'rgba(255, 230, 160, 0.4)' : 'var(--cream)',
-            padding: '0.8rem',
-            cursor: 'pointer',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.3s ease',
-            borderRadius: '4px'
-          }}
         >
           {isMuted ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <line x1="1" y1="1" x2="23" y2="23"></line>
             </svg>
           ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
             </svg>

@@ -43,7 +43,6 @@ function Index() {
   const btnRef = useRef<HTMLButtonElement>(null)
   const shroudRef = useRef<HTMLDivElement>(null)
 
-  // Χειρισμός mouse & touch φακού
   useEffect(() => {
     if (skipIntro) return;
 
@@ -90,16 +89,20 @@ function Index() {
     }
   }, [isCaught, skipIntro])
 
-  // Κίνηση του Terminal Button με responsive όρια οθόνης
   useEffect(() => {
     if (skipIntro || isCaught) return;
 
-    const isMobile = window.innerWidth <= 768;
-    const btnWidth = isMobile ? 200 : 260;
-    const btnHeight = isMobile ? 55 : 65;
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+    const btnWidth = isMobile ? 180 : 260;
+    const btnHeight = isMobile ? 50 : 65;
+    
+    // Πιο αργή ταχύτητα στα κινητά για να πιάνεται ευκολότερα
+    if (isMobile) {
+      velocity.current = { dx: 1.0, dy: 1.0 };
+    }
 
-    let currentX = Math.max(10, Math.min(window.innerWidth - btnWidth - 20, 50));
-    let currentY = 80;
+    let currentX = Math.max(10, Math.min(window.innerWidth - btnWidth - 20, 40));
+    let currentY = 100;
     let animationFrameId: number;
 
     const updatePosition = () => {
@@ -122,12 +125,12 @@ function Index() {
         currentX = Math.max(10, screenWidth - btnWidth - 10);
       }
 
-      if (currentY <= 20) {
+      if (currentY <= 40) {
         velocity.current.dy = Math.abs(velocity.current.dy);
-        currentY = 20;
-      } else if (currentY + btnHeight >= screenHeight - 20) {
+        currentY = 40;
+      } else if (currentY + btnHeight >= screenHeight - 40) {
         velocity.current.dy = -Math.abs(velocity.current.dy);
-        currentY = Math.max(20, screenHeight - btnHeight - 20);
+        currentY = Math.max(40, screenHeight - btnHeight - 40);
       }
 
       btnRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
@@ -138,14 +141,7 @@ function Index() {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isCaught, skipIntro])
 
-  // Trigger για το πιάσιμο του κουμπιού & Trigger του Announcement
-  const handleCatch = () => {
-    setIsCaught(true)
-    if (btnRef.current) {
-      btnRef.current.innerText = "TINAFTO"
-      btnRef.current.style.transform = ""
-    }
-
+  const triggerDivineAnnouncement = () => {
     const saved = localStorage.getItem("folkography_announcement")
     if (saved) {
       try {
@@ -160,9 +156,19 @@ function Index() {
           localStorage.removeItem("folkography_announcement")
         }
       } catch (e) {
-        console.error("Broadcast parsing error:", e)
+        console.error(e)
       }
     }
+  }
+
+  const handleCatch = (e?: React.TouchEvent | React.MouseEvent) => {
+    if (e) e.preventDefault(); // Αποτροπή διπλού trigger στα κινητά
+    setIsCaught(true)
+    if (btnRef.current) {
+      btnRef.current.innerText = "TINAFTO"
+      btnRef.current.style.transform = ""
+    }
+    triggerDivineAnnouncement()
   }
 
   const handleEnterSite = () => {
@@ -176,19 +182,17 @@ function Index() {
     }
   }
 
-  // Triple tap fallback για mobile devices
-  const touchTapCount = useRef(0)
-  const touchTimer = useRef<NodeJS.Timeout | null>(null)
-  const handleTinaftoTouch = () => {
-    touchTapCount.current += 1
-    if (touchTimer.current) clearTimeout(touchTimer.current)
-    
-    if (touchTapCount.current === 3) {
+  const tapCount = useRef(0)
+  const tapTimeout = useRef<NodeJS.Timeout | null>(null)
+  const handleMobileTap = () => {
+    tapCount.current += 1
+    if (tapTimeout.current) clearTimeout(tapTimeout.current)
+    if (tapCount.current === 3) {
       setShowAuthModal(true)
-      touchTapCount.current = 0
+      tapCount.current = 0
     } else {
-      touchTimer.current = setTimeout(() => {
-        touchTapCount.current = 0
+      tapTimeout.current = setTimeout(() => {
+        tapCount.current = 0
       }, 500)
     }
   }
@@ -216,163 +220,103 @@ function Index() {
       <style dangerouslySetInnerHTML={{ __html: `
         aside, header, nav, .sidebar, .project-topbar { display: none !important; }
         
-        .void-root { 
-          position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-          background-color: var(--night, #000); z-index: 999999; 
-          cursor: none; overflow: hidden; transition: opacity 2s ease; 
-        }
+        .void-root { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--night, #000); z-index: 999999; cursor: none; overflow: hidden; transition: opacity 2s ease; }
         .void-root.entered { opacity: 0; pointer-events: none; }
         
-        .joyce-canvas { 
-          position: absolute; inset: 0; padding: 4rem; color: #ffe6a0; 
-          font-family: "Courier New", Courier, monospace; font-size: 1.4rem; 
-          line-height: 1.8; text-align: justify; z-index: 1; 
-        }
+        .joyce-canvas { position: absolute; inset: 0; padding: 4rem; color: #ffe6a0; font-family: "Courier New", Courier, monospace; font-size: 1.4rem; line-height: 1.8; text-align: justify; z-index: 1; }
         .flicker { animation: bulb-flicker 4s infinite; }
         @keyframes bulb-flicker { 0%, 100% { opacity: 1; } 3% { opacity: 0.4; } 6% { opacity: 1; } 7% { opacity: 0.4; } 8% { opacity: 1; } 9% { opacity: 1; } 10% { opacity: 0.1; } 11% { opacity: 1; } 50% { opacity: 1; } 51% { opacity: 0.6; } 52% { opacity: 1; } }
         
-        .darkness-shroud { 
-          position: absolute; inset: 0; z-index: 2; pointer-events: none; 
-          transition: background 1.5s ease; background: #000; 
-        }
+        .darkness-shroud { position: absolute; inset: 0; z-index: 2; pointer-events: none; transition: background 1.5s ease; background: #000; }
         
-        .wave-container { 
-          position: absolute; top: -150vh; left: 0; width: 100vw; height: 300vh; 
-          display: flex; flex-wrap: wrap; align-content: flex-start; color: var(--rose); 
-          font-family: "Courier New", Courier, monospace; font-size: 2.5rem; font-weight: bold; 
-          line-height: 1; text-transform: uppercase; word-break: break-all; pointer-events: none; z-index: 3; 
-        }
+        .wave-container { position: absolute; top: -150vh; left: 0; width: 100vw; height: 300vh; display: flex; flex-wrap: wrap; align-content: flex-start; color: var(--rose); font-family: "Courier New", Courier, monospace; font-size: 2.5rem; font-weight: bold; line-height: 1; text-transform: uppercase; word-break: break-all; pointer-events: none; z-index: 3; }
         .wave-container.crash { animation: wave-fall 10s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes wave-fall { 0% { top: -150vh; opacity: 1; } 70% { opacity: 1; } 100% { top: 100vh; opacity: 0; } }
         
-        .haunted-btn { 
-          top: 0; left: 0; position: absolute; width: 260px; height: 65px; 
-          display: flex; align-items: center; justify-content: center; 
-          background: #000; color: #ff0000; border: 1px solid #ff0000; 
-          box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); font-family: "Courier New", Courier, monospace; 
-          font-size: 1.5rem; font-weight: bold; letter-spacing: 6px; z-index: 4; 
-          cursor: crosshair; will-change: transform; -webkit-tap-highlight-color: transparent;
-        }
-        
-        .haunted-btn.caught { 
-          left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; 
-          background: var(--night); color: var(--cream); border-color: var(--rose); 
-          box-shadow: none; cursor: pointer; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
+        .haunted-btn { top: 0; left: 0; position: absolute; width: 260px; height: 65px; display: flex; align-items: center; justify-content: center; background: #000; color: #ff0000; border: 1px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); font-family: "Courier New", Courier, monospace; font-size: 1.5rem; font-weight: bold; letter-spacing: 6px; z-index: 4; cursor: crosshair; will-change: transform; -webkit-tap-highlight-color: transparent; }
+        .haunted-btn.caught { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; background: var(--night); color: var(--cream); border-color: var(--rose); box-shadow: none; cursor: pointer; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        .archive-mainframe { 
-          position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-          background-color: var(--night); color: var(--cream); font-family: "Courier New", Courier, monospace; 
-          display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; 
-        }
-        .bosch-background { 
-          position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
-          background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1920px-The_Garden_of_earthly_delights.jpg'); 
-          background-size: cover; background-position: center; background-repeat: no-repeat; 
-          filter: grayscale(100%) invert(100%) sepia(100%) hue-rotate(180deg) saturate(400%) contrast(1.4); 
-          opacity: 0.25; z-index: 0; pointer-events: none; 
-        }
-        .content-layer { 
-          position: relative; z-index: 1; display: flex; flex-direction: column; 
-          align-items: center; justify-content: center; width: 100%; height: 100%; 
-        }
+        .archive-mainframe { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--night); color: var(--cream); font-family: "Courier New", Courier, monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; overflow: hidden; }
+        .bosch-background { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/1920px-The_Garden_of_earthly_delights.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; filter: grayscale(100%) invert(100%) sepia(100%) hue-rotate(180deg) saturate(400%) contrast(1.4); opacity: 0.25; z-index: 0; pointer-events: none; }
+        .content-layer { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
         
-        /* Desktop Compass */
-        .compass-container { 
-          position: relative; width: 60vw; max-width: 700px; height: 60vh; max-height: 600px; 
-          border: 1px solid rgba(255, 230, 160, 0.15); display: flex; align-items: center; justify-content: center; 
-        }
-        .tinafto-monolith { 
-          position: relative; font-size: 3.5rem; font-weight: bold; letter-spacing: 0.4em; 
-          margin: 0; margin-right: -0.4em; color: var(--rose); opacity: 0.9; 
-          font-family: "Courier New", Courier, monospace; text-shadow: 0px 4px 15px rgba(206, 104, 117, 0.4); 
-          user-select: none; z-index: 2; cursor: pointer; -webkit-tap-highlight-color: transparent;
-        }
-        .dir-node { 
-          position: absolute; text-decoration: none; color: var(--rose); font-weight: normal; 
-          letter-spacing: 4px; font-size: 1.2rem; background: var(--night); padding: 0 1rem; 
-          transition: all 0.3s ease; text-shadow: 0px 2px 10px rgba(0,0,0,0.9); text-transform: uppercase; 
-        }
+        /* Desktop Compass Layout */
+        .compass-container { position: relative; width: 60vw; max-width: 700px; height: 60vh; max-height: 600px; border: 1px solid rgba(255, 230, 160, 0.15); display: flex; align-items: center; justify-content: center; }
+        .tinafto-monolith { position: relative; font-size: 3.5rem; font-weight: bold; letter-spacing: 0.4em; margin: 0; margin-right: -0.4em; color: var(--rose); opacity: 0.9; font-family: "Courier New", Courier, monospace; text-shadow: 0px 4px 15px rgba(206, 104, 117, 0.4); user-select: none; z-index: 2; cursor: pointer; }
+        .dir-node { position: absolute; text-decoration: none; color: var(--rose); font-weight: normal; letter-spacing: 4px; font-size: 1.2rem; background: var(--night); padding: 0 1rem; transition: all 0.3s ease; text-shadow: 0px 2px 10px rgba(0,0,0,0.9); text-transform: uppercase; }
         .dir-node:hover { color: var(--cream); text-shadow: 0px 0px 8px var(--rose); transform: scale(1.05); }
+        
         .node-top { top: 0; left: 50%; transform: translate(-50%, -50%); }
         .node-bottom { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
         .node-right { right: 0; top: 50%; transform: translate(50%, -50%) rotate(90deg); }
         .node-left { left: 0; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
         
+        .mobile-only { display: none; }
         .contact-corner { position: absolute; bottom: 2rem; right: 2rem; font-family: "Courier New", Courier, monospace; z-index: 1; }
-        .contact-corner a { color: var(--cream); opacity: 0.5; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; transition: all 0.2s; text-shadow: 0px 2px 8px rgba(0,0,0,0.8); }
+        .contact-corner a { color: var(--cream); opacity: 0.5; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; transition: all 0.2s; }
         .contact-corner a:hover { opacity: 1; color: var(--rose); }
 
-        /* Divine Broadcast */
-        .divine-message-container { 
-          position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; 
-          background-color: rgba(0, 0, 0, 0.96); z-index: 99999999; pointer-events: none; padding: 2rem;
-        }
-        .divine-message-text { 
-          color: rgba(255, 255, 255, 0.95); font-family: "Courier New", Courier, monospace; 
-          font-size: 1.3rem; text-align: center; max-width: 850px; line-height: 1.6; 
-          animation: blurFadeInOut 5s ease-in-out forwards; text-shadow: 0 0 12px rgba(255,255,255,0.5); 
-          white-space: pre-wrap; word-break: break-word;
-        }
+        /* Announcement Modal / Fullscreen */
+        .divine-message-container { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.96); z-index: 9999999; pointer-events: none; padding: 2rem; }
+        .divine-message-text { color: rgba(255, 255, 255, 0.95); font-family: "Courier New", Courier, monospace; font-size: 1.25rem; text-align: center; max-width: 800px; line-height: 1.6; animation: blurFadeInOut 5s ease-in-out forwards; text-shadow: 0 0 12px rgba(255,255,255,0.4); }
         @keyframes blurFadeInOut { 0% { opacity: 0; filter: blur(10px); transform: scale(0.95); } 15% { opacity: 1; filter: blur(0px); transform: scale(1); } 85% { opacity: 1; filter: blur(0px); transform: scale(1); } 100% { opacity: 0; filter: blur(10px); transform: scale(1.05); } }
 
-        /* Auth Gateway Modal */
+        /* Auth Modal */
         .auth-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 99999999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-        .auth-card { background: #000; border: 1px solid var(--rose); padding: 2.5rem; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 1.5rem; text-align: center; }
+        .auth-card { background: #000; border: 1px solid var(--rose); padding: 2.5rem; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 1.5rem; text-align: center; }
         .input-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
         .auth-input { background: transparent; border: 1px solid rgba(255, 230, 160, 0.3); color: var(--cream); padding: 0.8rem; padding-right: 2.5rem; font-family: "Courier New", Courier, monospace; font-size: 0.9rem; width: 100%; outline: none; }
         .auth-input:focus { border-color: var(--rose); }
         .eye-btn { position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: rgba(255, 230, 160, 0.4); display: flex; align-items: center; padding: 0; }
         .eye-btn:hover { color: var(--rose); }
-        .auth-submit-btn { background: transparent; border: 1px solid var(--rose); color: var(--rose); padding: 0.8rem; font-family: "Courier New", Courier, monospace; letter-spacing: 2px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; }
+        .auth-submit-btn { background: transparent; border: 1px solid var(--rose); color: var(--rose); padding: 0.8rem; font-family: "Courier New", Courier, monospace; letter-spacing: 2px; cursor: pointer; font-size: 0.85rem; }
         .auth-submit-btn:hover { background: var(--rose); color: var(--night); }
 
-        /* ================= MOBILE ADAPTATIONS ================= */
+        /* ================= MOBILE VIEWPORT OPTIMIZATIONS ================= */
         @media (max-width: 768px) {
-          .joyce-canvas { padding: 1.5rem; font-size: 1rem; line-height: 1.6; }
-          .haunted-btn { width: 200px; height: 55px; font-size: 1.1rem; letter-spacing: 4px; }
-          .divine-message-text { font-size: 1.05rem; line-height: 1.5; max-width: 95%; }
+          .joyce-canvas { padding: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+          .haunted-btn { width: 180px; height: 50px; font-size: 1.1rem; letter-spacing: 3px; }
+          .divine-message-text { font-size: 1.05rem; }
 
-          /* Ακύρωση του Compass Frame & Μετατροπή σε Κάθετο Μενού */
+          /* Καθαρή Κατακόρυφη Στήλη */
           .compass-container {
-            width: 90vw !important;
+            width: 85vw !important;
             height: auto !important;
             max-height: none !important;
-            border: 1px solid rgba(255, 230, 160, 0.15) !important;
             flex-direction: column !important;
-            gap: 2rem !important;
-            padding: 3.5rem 1.5rem 2.5rem !important;
-            box-sizing: border-box;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 0 !important;
+            padding: 3rem 1.5rem !important;
+            border: 1px solid rgba(255, 230, 160, 0.15) !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            backdrop-filter: blur(5px);
           }
 
           .tinafto-monolith {
-            font-size: 2.3rem !important;
-            letter-spacing: 0.25em !important;
-            margin-right: -0.25em !important;
-            margin-bottom: 1rem !important;
+            font-size: 2.2rem !important;
+            letter-spacing: 0.2em !important;
+            margin-right: 0 !important;
+            margin-bottom: 2rem !important;
           }
 
-          /* Όλα τα links σε κάθετη στοίχιση χωρίς περιστροφές */
+          /* Κατάργηση position absolute & rotate. Όλα σε λίστα. */
           .dir-node {
             position: static !important;
             transform: none !important;
-            font-size: 1.05rem !important;
-            letter-spacing: 3px !important;
-            padding: 0.6rem 0 !important;
-            background: transparent !important;
-            text-align: center !important;
+            font-size: 1rem !important;
+            letter-spacing: 2px !important;
+            padding: 1rem 0 !important;
             width: 100% !important;
-            display: block !important;
-            border-bottom: 1px dashed rgba(206, 104, 117, 0.2);
+            text-align: center !important;
+            background: transparent !important;
+            border-bottom: 1px dashed rgba(206, 104, 117, 0.25);
           }
-          .dir-node:last-child {
-            border-bottom: none;
-          }
-          .dir-node:hover {
-            transform: none !important;
-          }
+          .dir-node:last-child { border-bottom: none; }
+          .dir-node:hover { transform: none !important; }
 
-          /* Εξαφάνιση της κάτω γωνίας Contact, αφού μπαίνει στο κύριο κάθετο μενού */
+          /* Εμφάνιση του Contact μέσα στη στήλη, απόκρυψη του εξωτερικού */
+          .mobile-only { display: block !important; }
           .contact-corner { display: none !important; }
         }
       `}} />
@@ -384,7 +328,7 @@ function Index() {
             <h1 
               className="tinafto-monolith" 
               onClick={handleTinaftoTripleClick}
-              onTouchStart={handleTinaftoTouch}
+              onTouchStart={handleMobileTap}
               title=""
             >
               TINAFTO
@@ -393,17 +337,18 @@ function Index() {
             <Link to="/philosophy" className="dir-node node-right">ΕΛΛΕΙΠΗΣ ΦΙΛΟΣΟΦΙΑ</Link>
             <Link to="/oral-history" className="dir-node node-bottom">ΑΡΧΕΙΟ ΠΡΟΦΟΡΙΚΗΣ ΙΣΤΟΡΙΑΣ</Link>
             <Link to="/echotopias" className="dir-node node-left">ΗΧΟΤΟΠΙΑ</Link>
-            {/* Contact ενσωματωμένο για κινητά και desktop fallback */}
-            <Link to="/contact" className="dir-node node-contact">CONTACT</Link>
+            
+            {/* Εμφανίζεται ΜΟΝΟ στα κινητά μέσα στο μενού */}
+            <Link to="/contact" className="dir-node mobile-only">CONTACT</Link>
           </div>
         </div>
 
+        {/* Εμφανίζεται ΜΟΝΟ στα desktop κάτω δεξιά */}
         <div className="contact-corner">
           <Link to="/contact">CONTACT</Link>
         </div>
       </main>
 
-      {/* Gateway Overlay */}
       {showAuthModal && (
         <div className="auth-overlay">
           <form onSubmit={handleUnifiedAuth} className="auth-card">
@@ -422,7 +367,6 @@ function Index() {
                 className="eye-btn"
                 onMouseDown={() => setShowPassword(true)}
                 onMouseUp={() => setShowPassword(false)}
-                onMouseLeave={() => setShowPassword(false)}
                 onTouchStart={() => setShowPassword(true)}
                 onTouchEnd={() => setShowPassword(false)}
               >
@@ -450,7 +394,6 @@ function Index() {
         </div>
       )}
 
-      {/* Intro Overlay */}
       {!skipIntro && (
         <div className={`void-root ${isEntered ? "entered" : ""}`}>
           <div className={`joyce-canvas ${!isCaught ? "flicker" : ""}`} style={{ opacity: isCaught ? 0 : 1 }}>

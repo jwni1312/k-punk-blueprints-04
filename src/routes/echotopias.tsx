@@ -5,45 +5,71 @@ export const Route = createFileRoute("/echotopias")({
   component: Echotopias,
 })
 
-function Echotopias() {
-  const [soundArchives] = useState(() => {
-    const saved = localStorage.getItem("folkography_sound_archives")
-    if (saved) return JSON.parse(saved)
-    return [
-      {
-        id: "ARCHIVE.SND.01",
-        title: "ΝΥΧΤΕΡΙΝΗ_ΒΡΟΧΗ_ΣΕ_ΤΣΙΓΚΟ",
-        duration: "04:20:15",
-        location: "Αθήνα, Κέντρο - Οδός Θεμιστοκλέους",
-        description: "Καταγραφή βροχόπτωσης επί τριών ωρών σε μεταλλική επιφάνεια μπαλκονιού. Περιλαμβάνει απομακρυσμένες σειρήνες και τον υπόγειο παλμό της κυκλοφορίας.",
-        audioUrl: "/background-music.mp3", 
-        author: "System Admin",
-        date: "2026-06-01",
-      },
-      {
-        id: "ARCHIVE.SND.02",
-        title: "ΜΗΧΑΝΙΚΟΣ_ΠΑΛΜΟΣ_ΛΙΜΑΝΙΟΥ",
-        duration: "01:15:40",
-        location: "Πειραιάς - Πύλη Ε3",
-        description: "Ήχοι από γερανογέφυρες, αλύσους πλοίων και μεταλλικούς τόνους ανάμεσα σε φορτηγά. Η ηχογράφηση έγινε στις 04:00 το πρωί.",
-        audioUrl: "/background-music.mp3",
-        author: "System Admin",
-        date: "2026-06-02",
-      },
-      {
-        id: "ARCHIVE.SND.03",
-        title: "ΕΣΩΤΕΡΙΚΟΣ_ΧΩΡΟΣ_ΚΑΦΕΝΕΙΟΥ",
-        duration: "02:50:00",
-        location: "Επαρχία - Ορεινή Αρκαδία",
-        description: "Χαμηλές συχνότητες από ομιλίες στο βάθος, το ανακάτεμα της ζάχαρης σε ποτήρι και το ραδιόφωνο στα μεσαία κύματα να παίζει παλιά λαϊκά.",
-        audioUrl: "/background-music.mp3",
-        author: "System Admin",
-        date: "2026-06-03",
-      },
-    ]
-  })
+interface EchotopiaItem {
+  id: string;
+  title: string;
+  duration: string;
+  location: string;
+  description: string;
+  audioUrl: string;
+  author: string;
+  date: string;
+}
 
-  const [selectedArchive, setSelectedArchive] = useState<typeof soundArchives[0] | null>(null)
+const defaultArchives: EchotopiaItem[] = [
+  {
+    id: "ARCHIVE.SND.01",
+    title: "ΝΥΧΤΕΡΙΝΗ_ΒΡΟΧΗ_ΣΕ_ΤΣΙΓΚΟ",
+    duration: "04:20:15",
+    location: "Αθήνα, Κέντρο - Οδός Θεμιστοκλέους",
+    description: "Καταγραφή βροχόπτωσης επί τριών ωρών σε μεταλλική επιφάνεια μπαλκονιού. Περιλαμβάνει απομακρυσμένες σειρήνες και τον υπόγειο παλμό της κυκλοφορίας.",
+    audioUrl: "/background-music.mp3", 
+    author: "System Admin",
+    date: "2026-06-01",
+  },
+  {
+    id: "ARCHIVE.SND.02",
+    title: "ΜΗΧΑΝΙΚΟΣ_ΠΑΛΜΟΣ_ΛΙΜΑΝΙΟΥ",
+    duration: "01:15:40",
+    location: "Πειραιάς - Πύλη Ε3",
+    description: "Ήχοι από γερανογέφυρες, αλύσους πλοίων και μεταλλικούς τόνους ανάμεσα σε φορτηγά. Η ηχογράφηση έγινε στις 04:00 το πρωί.",
+    audioUrl: "/background-music.mp3",
+    author: "System Admin",
+    date: "2026-06-02",
+  },
+  {
+    id: "ARCHIVE.SND.03",
+    title: "ΕΣΩΤΕΡΙΚΟΣ_ΧΩΡΟΣ_ΚΑΦΕΝΕΙΟΥ",
+    duration: "02:50:00",
+    location: "Επαρχία - Ορεινή Αρκαδία",
+    description: "Χαμηλές συχνότητες από ομιλίες στο βάθος, το ανακάτεμα της ζάχαρης σε ποτήρι και το ραδιόφωνο στα μεσαία κύματα να παίζει παλιά λαϊκά.",
+    audioUrl: "/background-music.mp3",
+    author: "System Admin",
+    date: "2026-06-03",
+  },
+]
+
+function Echotopias() {
+  const [soundArchives, setSoundArchives] = useState<EchotopiaItem[]>(defaultArchives)
+
+  useEffect(() => {
+    const saved = localStorage.getItem("folkography_sound_archives")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const validItems = parsed.filter(item => item && typeof item === 'object' && item.title)
+          if (validItems.length > 0) {
+            setSoundArchives(validItems)
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }, [])
+
+  const [selectedArchive, setSelectedArchive] = useState<EchotopiaItem | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -57,8 +83,7 @@ function Echotopias() {
     };
   }, []);
 
-  // Συνάρτηση για ασφαλή αλλαγή αρχείου (σταματάει τον ήχο)
-  const changeArchive = (archive: any) => {
+  const changeArchive = (archive: EchotopiaItem | null) => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -70,6 +95,9 @@ function Echotopias() {
   const handlePlayToggle = (url: string) => {
     if (!audioRef.current) {
       audioRef.current = new Audio(url)
+      audioRef.current.addEventListener('ended', () => {
+        setIsPlaying(false)
+      })
     }
 
     if (isPlaying) {
@@ -81,9 +109,39 @@ function Echotopias() {
     }
   }
 
-  const currentIndex = selectedArchive ? soundArchives.findIndex((a: any) => a.id === selectedArchive.id) : -1
+  const currentIndex = selectedArchive ? soundArchives.findIndex((a) => a.id === selectedArchive.id) : -1
   const hasNext = currentIndex >= 0 && currentIndex < soundArchives.length - 1
   const hasPrev = currentIndex > 0
+
+  // --- SWIPE GESTURE LOGIC ---
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
+  const minSwipeDistance = 50
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX
+  }
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current || !selectedArchive) return
+    const distance = touchStartX.current - touchEndX.current
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe && hasNext) {
+      changeArchive(soundArchives[currentIndex + 1])
+    } else if (isRightSwipe && hasPrev) {
+      changeArchive(soundArchives[currentIndex - 1])
+    }
+    
+    // Reset values
+    touchStartX.current = null
+    touchEndX.current = null
+  }
 
   return (
     <>
@@ -94,7 +152,7 @@ function Echotopias() {
           position: fixed; top: 0; left: 0; right: 0; bottom: 0;
           background-color: var(--night, #000); color: var(--cream);
           font-family: "Courier New", Courier, monospace; padding: 5rem 6rem;
-          overflow-y: auto; z-index: 10;
+          overflow-y: auto; overflow-x: hidden; z-index: 10;
         }
 
         .preservation-bg {
@@ -113,8 +171,8 @@ function Echotopias() {
 
         .sys-header { font-size: 0.85rem; opacity: 0.7; letter-spacing: 2px; color: var(--rose); }
 
-        .back-nav { font-size: 0.85rem; text-decoration: none; color: var(--cream); opacity: 0.6; letter-spacing: 2px; transition: all 0.3s; }
-        .back-nav:hover { opacity: 1; color: var(--rose); }
+        .back-nav { font-size: 1rem; font-weight: bold; text-decoration: none; color: var(--cream); opacity: 0.7; letter-spacing: 2px; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .back-nav:hover { opacity: 1; color: var(--rose); transform: translateX(-5px); }
 
         .sound-container { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
 
@@ -144,12 +202,11 @@ function Echotopias() {
         .action-btn.primary { border-color: var(--rose); color: var(--rose); }
         .action-btn.primary:hover { background: var(--rose); color: var(--night); }
 
-        .back-to-list { font-size: 0.8rem; opacity: 0.6; cursor: pointer; margin-bottom: 1rem; letter-spacing: 2px; display: inline-block; }
+        .back-to-list { font-size: 0.8rem; opacity: 0.6; cursor: pointer; margin-bottom: 1rem; letter-spacing: 2px; display: inline-block; transition: all 0.3s; }
         .back-to-list:hover { opacity: 1; color: var(--rose); }
 
-        /* --- ΝΕΟ: Navigation & Hover Menu --- */
         .doc-navigation {
-          display: flex; justify-content: space-between;
+          display: flex; justify-content: space-between; position: relative;
           border-top: 1px solid rgba(206, 104, 117, 0.3);
           padding-top: 1.5rem; margin-top: 1.5rem;
         }
@@ -178,26 +235,30 @@ function Echotopias() {
         .sound-container { animation: archiveFadeIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
         @media (max-width: 768px) {
-          .sound-mainframe { padding: 2rem 1.5rem !important; }
-          .top-nav-bar { flex-direction: column; gap: 1.2rem; align-items: flex-start; padding-bottom: 1rem; margin-bottom: 2rem; }
-          .sys-header, .back-nav { font-size: 0.75rem; }
+          .sound-mainframe { padding: 1.5rem 1rem !important; }
+          .top-nav-bar { flex-direction: row; gap: 1rem; align-items: center; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+          .sys-header { display: none; }
+          .back-nav { font-size: 1.1rem; }
+          
           .sound-item { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
-          .detail-view { padding: 1.5rem; }
+          .detail-view { padding: 1.5rem; gap: 1.5rem; }
           .detail-title { font-size: 1.1rem; line-height: 1.4; }
           .player-actions { flex-direction: column; align-items: stretch; gap: 0.8rem; }
           .action-btn { text-align: center; width: 100%; box-sizing: border-box; padding: 1rem; }
           .side-index-wrapper { display: none; }
+          
+          .doc-navigation { opacity: 0.4; border-top-style: dashed; }
+          .doc-navigation::after { content: '← SWIPE →'; position: absolute; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 3px; color: var(--rose); opacity: 0.5; margin-top: 5px; }
         }
       `}} />
 
       <main className="sound-mainframe">
         <div className="preservation-bg"></div>
 
-        {/* --- NEO: Hover Sidebar Menu --- */}
         <div className="side-index-wrapper">
           <div className="side-index">
             <div style={{ fontSize: '0.65rem', letterSpacing: '2px', color: 'var(--rose)', marginBottom: '0.5rem' }}>// ΕΥΡΕΤΗΡΙΟ</div>
-            {soundArchives.map((archive: any) => (
+            {soundArchives.map((archive: EchotopiaItem) => (
               <div 
                 key={archive.id} 
                 className={`side-index-item ${selectedArchive?.id === archive.id ? 'active' : ''}`}
@@ -210,14 +271,14 @@ function Echotopias() {
         </div>
 
         <div className="top-nav-bar">
+          <Link to="/" className="back-nav"><span>←</span> <span>BACK</span></Link>
           <div className="sys-header">ΗΧΟΤΟΠΙΑ</div>
-          <Link to="/" className="back-nav">[ ESC / RETURN_TO_CORE ]</Link>
         </div>
 
         <div className="sound-container">
           {!selectedArchive ? (
             <>
-              {soundArchives.map((archive: any) => (
+              {soundArchives.map((archive: EchotopiaItem) => (
                 <div 
                   key={archive.id} 
                   className="sound-item"
@@ -233,7 +294,12 @@ function Echotopias() {
               ))}
             </>
           ) : (
-            <div className="detail-view">
+             <div 
+              className="detail-view"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               <div>
                 <span className="back-to-list" onClick={() => changeArchive(null)}>
                   ← [ΕΠΙΣΤΡΟΦΗ ΣΤΑ ΗΧΟΤΟΠΙΑ]
@@ -271,17 +337,16 @@ function Echotopias() {
                 </a>
               </div>
 
-              {/* --- NEO: Bottom Arrow Navigation --- */}
               <div className="doc-navigation">
                 {hasPrev ? (
                   <span className="nav-arrow" onClick={() => changeArchive(soundArchives[currentIndex - 1])}>
-                    ← ΠΡΟΗΓΟΥΜΕΝΟ
+                    ← PREV
                   </span>
                 ) : <div />}
                 
                 {hasNext ? (
                   <span className="nav-arrow" onClick={() => changeArchive(soundArchives[currentIndex + 1])}>
-                    ΕΠΟΜΕΝΟ →
+                    NEXT →
                   </span>
                 ) : <div />}
               </div>
