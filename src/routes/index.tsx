@@ -96,7 +96,6 @@ function Index() {
     const btnWidth = isMobile ? 180 : 260;
     const btnHeight = isMobile ? 50 : 65;
     
-    // Πιο αργή ταχύτητα στα κινητά για να πιάνεται ευκολότερα
     if (isMobile) {
       velocity.current = { dx: 1.0, dy: 1.0 };
     }
@@ -162,7 +161,7 @@ function Index() {
   }
 
   const handleCatch = (e?: React.TouchEvent | React.MouseEvent) => {
-    if (e) e.preventDefault(); // Αποτροπή διπλού trigger στα κινητά
+    if (e) e.preventDefault();
     setIsCaught(true)
     if (btnRef.current) {
       btnRef.current.innerText = "TINAFTO"
@@ -244,14 +243,25 @@ function Index() {
         .compass-container { position: relative; width: 60vw; max-width: 700px; height: 60vh; max-height: 600px; border: 1px solid rgba(255, 230, 160, 0.15); display: flex; align-items: center; justify-content: center; }
         .tinafto-monolith { position: relative; font-size: 3.5rem; font-weight: bold; letter-spacing: 0.4em; margin: 0; margin-right: -0.4em; color: var(--rose); opacity: 0.9; font-family: "Courier New", Courier, monospace; text-shadow: 0px 4px 15px rgba(206, 104, 117, 0.4); user-select: none; z-index: 2; cursor: pointer; }
         
-        .dir-node { position: absolute; text-decoration: none; color: var(--rose); font-weight: normal; letter-spacing: 4px; font-size: 1.2rem; background: var(--night); padding: 0 1rem; transition: all 0.3s ease; text-shadow: 0px 2px 10px rgba(0,0,0,0.9); text-transform: uppercase; }
-        /* Αφαιρέσαμε τελείως το transform από εδώ για να μην χαλάει τη διάταξη */
-        .dir-node:hover { color: var(--cream); text-shadow: 0px 0px 8px var(--rose); }
-        
-        .node-top { top: 0; left: 50%; transform: translate(-50%, -50%); }
-        .node-bottom { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
-        .node-right { right: 0; top: 50%; transform: translate(50%, -50%) rotate(90deg); }
-        .node-left { left: 0; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+        /* ΚΛΕΙΔΩΜΕΝΟ ΑΠΟ ANIMATION KAI TRANSFORM */
+        .dir-node { 
+          position: absolute; 
+          text-decoration: none; 
+          color: var(--rose); 
+          font-weight: normal; 
+          letter-spacing: 4px; 
+          font-size: 1.2rem; 
+          background: var(--night); 
+          padding: 0 1rem; 
+          text-shadow: 0px 2px 10px rgba(0,0,0,0.9); 
+          text-transform: uppercase; 
+          /* Μόνο χρώμα αλλάζει ομαλά, καμία άλλη κίνηση/zoom */
+          transition: color 0.3s ease, text-shadow 0.3s ease; 
+        }
+        .dir-node:hover { 
+          color: var(--cream); 
+          text-shadow: 0px 0px 8px var(--rose); 
+        }
         
         .node-top { top: 0; left: 50%; transform: translate(-50%, -50%); }
         .node-bottom { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
@@ -307,7 +317,7 @@ function Index() {
             margin-bottom: 2rem !important;
           }
 
-          /* Κατάργηση position absolute & rotate. Όλα σε λίστα. */
+          /* Κατάργηση position absolute & rotate για κινητά. Όλα σε λίστα. */
           .dir-node {
             position: static !important;
             transform: none !important;
@@ -322,7 +332,6 @@ function Index() {
           .dir-node:last-child { border-bottom: none; }
           .dir-node:hover { transform: none !important; }
 
-          /* Εμφάνιση του Contact μέσα στη στήλη, απόκρυψη του εξωτερικού */
           .mobile-only { display: block !important; }
           .contact-corner { display: none !important; }
         }
